@@ -55,3 +55,6 @@ hs_err_pid*
 # ---> Gradle
 ## Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
+
+# ---> Kotlin
+*.kotlin_module
