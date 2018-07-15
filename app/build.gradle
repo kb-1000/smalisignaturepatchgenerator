@@ -7,7 +7,7 @@ android {
     compileSdkVersion = 27
     buildToolsVersion = "27.0.3"
     defaultConfig {
-        applicationId "com.github.kaeptmblaubaer1000.smalipatchgenerator"
+        applicationId = "com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator"
         minSdkVersion 16
         targetSdkVersion(27)
         versionCode 1
