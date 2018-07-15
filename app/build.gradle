@@ -33,7 +33,7 @@ dependencies {
     implementation("org.smali:baksmali:${smali_version}")
 
     // The following one block contains updates to dependencies of other dependencies.
-    implementation("com.beust.jcommander:1.74")
+    implementation("com.beust:jcommander:1.74")
 
     implementation("com.android.support:appcompat-v7:27.1.1")
     implementation("com.android.support.constraint:constraint-layout:1.1.2")
