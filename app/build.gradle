@@ -3,6 +3,9 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+
+def patchDefGeneratedDirectory = new File(projectDir, "build/generated/source/patchdef")
+
 android {
     compileSdkVersion = 27
     buildToolsVersion = "27.0.3"
@@ -24,6 +27,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    sourceSets {
+        main.java.srcDirs += patchDefGeneratedDirectory
+        main.kotlin.srcDirs += patchDefGeneratedDirectory
+    }
 }
 
 dependencies {
@@ -41,4 +49,14 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
+
+
+tasks.create("generateIdentificationClassDefRewriter") {
+    doFirst {
+        GenerateIdentificationClassDefRewriter.generate(patchDefGeneratedDirectory)
+    }
+}
+preBuild {
+    dependsOn(generateIdentificationClassDefRewriter)
 }
