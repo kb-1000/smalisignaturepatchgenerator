@@ -4,7 +4,7 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.TypeSpec
 import java.io.File
 
-object GenerateIdentificationClassDefRewriter {
+object PatchDefCompiler {
     @JvmStatic
     fun generate(file: File) {
         val identificationClassDefRewriterClass = TypeSpec.classBuilder(ClassName("com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated", "IdentificationClassDefRewriter"))

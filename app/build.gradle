@@ -52,11 +52,11 @@ dependencies {
 }
 
 
-tasks.create("generateIdentificationClassDefRewriter") {
+tasks.create("compilePatchDef") {
     doFirst {
-        GenerateIdentificationClassDefRewriter.generate(patchDefGeneratedDirectory)
+        PatchDefCompiler.generate(patchDefGeneratedDirectory)
     }
 }
 preBuild {
-    dependsOn(generateIdentificationClassDefRewriter)
+    dependsOn(compilePatchDef)
 }
