@@ -4,18 +4,20 @@
 
 grammar PatchDef;
 
-rootParser : (patch | WHITESPACE)* EOF ;
+rootParser : (patch | whitespace)* EOF ;
 
-patch : 'patch' WHITESPACE* '(' WHITESPACE* StringLiteral WHITESPACE* ')' WHITESPACE* '{' WHITESPACE* patchBody WHITESPACE*  '}' ;
+patch : 'patch' whitespace* '(' whitespace* StringLiteral whitespace* ')' whitespace* '{' whitespace* patchBody whitespace*  '}' NL ;
 
 patchBody : ;
 
+whitespace : WHITESPACE | NL ;
 
 /*
  * Lexer Rules
  */
 
-WHITESPACE : [\p{White_Space}] ;
+WHITESPACE : [ \t] ;
+NL : '\r' | '\n' | '\r\n' | WHITESPACE ';' WHITESPACE ;
 
 // The following part is derived from
 // https://github.com/antlr/grammars-v4/blob/8d2396883090584f83ca4575edf74baa7ccc14f2/java8/Java8.g4
