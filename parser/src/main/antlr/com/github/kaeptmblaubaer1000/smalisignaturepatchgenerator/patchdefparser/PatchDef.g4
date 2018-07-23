@@ -6,7 +6,7 @@ grammar PatchDef;
 
 rootParser : (patch | whitespace)* EOF ;
 
-patch : 'patch' whitespace* '(' whitespace* StringLiteral whitespace* ')' whitespace* '{' whitespace* patchBody whitespace*  '}' NL ;
+patch : 'patch' whitespace* '(' whitespace* StringLiteral whitespace* ')' whitespace* '{' whitespace* patchBody whitespace* '}' NL ;
 
 patchBody : ;
 

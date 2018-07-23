@@ -37,7 +37,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlin_version}")
     implementation("org.smali:baksmali:${smali_version}")
 
     // The following one block contains updates to dependencies of other dependencies.
