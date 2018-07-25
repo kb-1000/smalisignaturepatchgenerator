@@ -1,1 +1,1 @@
-../../parsergrammar/src
+../../parsergrammar/build.gradle.kts
