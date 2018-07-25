@@ -21,3 +21,13 @@
 #-renamesourcefileattribute SourceFile
 
 -dontobfuscate
+-dontwarn java.awt.**
+-dontwarn javax.swing.**
+-dontwarn javax.print.**
+-dontwarn org.antlr.*.gui.**
+-dontwarn sun.misc.**
+-dontwarn org.stringtemplate.*.gui.**
+-dontwarn org.antlr.stringtemplate.**
+-dontwarn java.lang.**
+-dontwarn javax.lang.**
+-dontwarn com.beust.jcommander.JCommander

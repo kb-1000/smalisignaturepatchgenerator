@@ -38,10 +38,13 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlin_version}")
-    implementation("org.smali:baksmali:${smali_version}")
+    implementation("org.smali:baksmali:${smali_version}") {
+        exclude group: "com.google.guava"
+    }
 
     // The following one block contains updates to dependencies of other dependencies.
     implementation("com.beust:jcommander:1.74")
+    implementation("com.google.guava:guava:22.0-android")
 
     implementation("com.android.support:appcompat-v7:27.1.1")
     implementation("com.android.support.constraint:constraint-layout:1.1.2")
