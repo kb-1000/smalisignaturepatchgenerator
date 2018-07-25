@@ -21,6 +21,8 @@ NL : '\r' | '\n' | '\r\n' | WHITESPACE ';' WHITESPACE ;
 
 // The following part is derived from
 // https://github.com/antlr/grammars-v4/blob/8d2396883090584f83ca4575edf74baa7ccc14f2/java8/Java8.g4
+// but I've removed \f from the escapes since this DSL should be compatible with Kotlin and Groovy, because it's missing
+// in Kotlin and you don't need it in this DSL.
 
 /*
  * [The "BSD license"]
@@ -55,7 +57,7 @@ NL : '\r' | '\n' | '\r\n' | WHITESPACE ';' WHITESPACE ;
 StringLiteral : '"' StringCharacters? '"' ;
 fragment StringCharacters : StringCharacter+ ;
 fragment StringCharacter : ~["\\\r\n] | EscapeSequence ;
-fragment EscapeSequence : '\\' [btnfr"'\\] | OctalEscape | UnicodeEscape ;
+fragment EscapeSequence : '\\' [btnr"'\\] | OctalEscape | UnicodeEscape ;
 fragment OctalEscape : '\\' OctalDigit | '\\' OctalDigit OctalDigit | '\\' ZeroToThree OctalDigit OctalDigit ;
 fragment ZeroToThree : [0-3] ;
 fragment UnicodeEscape : '\\' 'u'+ HexDigit HexDigit HexDigit HexDigit ;
