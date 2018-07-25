@@ -4,6 +4,10 @@
 
 grammar PatchDef;
 
+@header {
+    package com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.patchdefparser;
+}
+
 rootParser : (patch | whitespace)* EOF ;
 
 patch : 'patch' whitespace* '(' whitespace* StringLiteral whitespace* ')' whitespace* '{' whitespace* patchBody whitespace* '}' NL ;

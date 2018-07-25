@@ -7,6 +7,9 @@ repositories {
     jcenter()
 }
 
+val antlr_version: String by rootProject.extra
+
 dependencies {
-    antlr("org.antlr:antlr4:4.7.1")
+    antlr("org.antlr:antlr4:${antlr_version}")
+    api("org.antlr:antlr4-runtime:${antlr_version}")
 }
