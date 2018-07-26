@@ -12,8 +12,9 @@ rootParser : (patch | whitespace)* EOF ;
 
 patch : 'patch' WHITESPACE* '(' WHITESPACE* StringLiteral WHITESPACE* ')' WHITESPACE* '{' whitespace* patchBody whitespace* '}' NL ;
 
-patchBody : (assignment | whitespace)*;
+patchBody : (statement | whitespace)* ;
 
+statement : assignment NL ;
 assignment : (humanNameAssignment | modifiedClassAsignment) NL ;
 
 humanNameAssignment : 'humanName' WHITESPACE* '=' WHITESPACE* StringLiteral ;
