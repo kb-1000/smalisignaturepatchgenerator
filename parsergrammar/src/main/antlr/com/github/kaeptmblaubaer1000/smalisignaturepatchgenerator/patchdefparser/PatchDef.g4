@@ -10,9 +10,9 @@ grammar PatchDef;
 
 rootParser : (patch | whitespace)* EOF ;
 
-patch : 'patch' whitespace* '(' whitespace* StringLiteral whitespace* ')' whitespace* '{' whitespace* patchBody whitespace* '}' NL ;
+patch : 'patch' WHITESPACE* '(' WHITESPACE* StringLiteral WHITESPACE* ')' WHITESPACE* '{' WHITESPACE* patchBody whitespace* '}' NL ;
 
-patchBody : assignment*;
+patchBody : (assignment | whitespace)*;
 
 assignment : (humanNameAssignment) NL ;
 
