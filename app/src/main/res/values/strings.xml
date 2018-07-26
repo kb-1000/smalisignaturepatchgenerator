@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SMALI Signature Patch Generator</string>
+    <string name="open_apk_file">Open APK file</string>
+    <string name="open_installed_app">Open installed app</string>
 </resources>
