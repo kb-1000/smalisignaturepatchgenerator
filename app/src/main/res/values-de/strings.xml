@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">SMALI Signature Patch Generator</string>
     <string name="open_apk_file">APK-Datei öffnen</string>
     <string name="open_installed_app">Installierte App öffnen</string>
 </resources>
