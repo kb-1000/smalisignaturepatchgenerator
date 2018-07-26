@@ -74,3 +74,7 @@ fun unescapeJavaString(st: String): String {
     }
     return sb.toString()
 }
+
+fun unqouteUnescapeJavaString(st: String) : String {
+    return unescapeJavaString(st.slice(1..st.length-2))
+}

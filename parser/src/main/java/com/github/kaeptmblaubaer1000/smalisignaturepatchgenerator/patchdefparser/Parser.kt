@@ -15,14 +15,14 @@ class Parser {
         val parser = PatchDefParser(tokens)
         val parserContext = parser.rootParser()
         for (ctx in parserContext.patch()) {
-            patch(unescapeJavaString(ctx.StringLiteral().text)) {
+            patch(unqouteUnescapeJavaString(ctx.StringLiteral().text)) {
                 ParseTreeWalker().walk(object : PatchDefBaseListener() {
                     override fun exitHumanNameAssignment(ctx: PatchDefParser.HumanNameAssignmentContext) {
-                        humanName = unescapeJavaString(ctx.StringLiteral().text)
+                        humanName = unqouteUnescapeJavaString(ctx.StringLiteral().text)
                     }
 
                     override fun exitModifiedClassAssignment(ctx: PatchDefParser.ModifiedClassAssignmentContext) {
-                        modifiedClass = unescapeJavaString(ctx.StringLiteral().text)
+                        modifiedClass = unqouteUnescapeJavaString(ctx.StringLiteral().text)
                     }
                 }, ctx)
             }
