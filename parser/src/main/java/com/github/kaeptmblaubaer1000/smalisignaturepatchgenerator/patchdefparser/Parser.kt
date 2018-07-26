@@ -14,4 +14,11 @@ class Parser {
         val parser = PatchDefParser(tokens)
         val parserContext = parser.rootParser()
     }
+
+    fun patch(internalName: String, configurator: NullablePatchDef.() -> Unit) {
+        val nullablePatchDef = NullablePatchDef()
+        nullablePatchDef.configurator()
+        val patchDef = nullablePatchDef.toNonNullable() ?: return
+        mutablePatchDefs[internalName] = patchDef
+    }
 }
