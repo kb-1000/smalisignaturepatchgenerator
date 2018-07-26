@@ -1,0 +1,4 @@
+patch("xboxlive") {
+    humanName = "Xbox Live"
+    modifiedClass = "Lcom/microsoft/onlineid/internal/PackageInfoHelper;"
+}

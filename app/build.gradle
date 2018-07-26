@@ -5,6 +5,7 @@ apply plugin: 'kotlin-android-extensions'
 
 
 def patchDefGeneratedDirectory = new File(projectDir, "build/generated/source/patchdef")
+def patchDefSourceDirectory = new File(projectDir, "src/main/patchdef")
 
 android {
     compileSdkVersion = 27
@@ -58,7 +59,7 @@ dependencies {
 
 tasks.create("compilePatchDef") {
     doFirst {
-        PatchDefCompiler.generate(patchDefGeneratedDirectory)
+        PatchDefCompiler.generate(patchDefSourceDirectory, patchDefGeneratedDirectory)
     }
 }
 preBuild {

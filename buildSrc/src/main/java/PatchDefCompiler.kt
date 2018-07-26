@@ -1,3 +1,4 @@
+import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.patchdefparser.Parser
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
@@ -9,8 +10,9 @@ import java.io.File
 
 object PatchDefCompiler {
     @JvmStatic
-    fun generate(file: File) {
-        val signatureVerificationTypes = listOf("firstPatch")
+    fun generate(input: File, output: File) {
+        val patchDefs = parseFiles(input).patchDefs
+        val signatureVerificationTypes = patchDefs.keys
         val signatureVerificationTypesClassConstructor = FunSpec.constructorBuilder()
                 .addParameters(signatureVerificationTypes.map { ParameterSpec.builder(it, Boolean::class).defaultValue("false").build() })
 
@@ -34,6 +36,14 @@ object PatchDefCompiler {
                 .addType(identificationClassDefRewriterClass)
                 .addType(signatureVerificationTypesClass)
                 .build()
-        fileSpec.writeTo(file)
+        fileSpec.writeTo(output)
+    }
+
+    fun parseFiles(dir: File): Parser {
+        val parser = Parser()
+        for(file: File in dir.walk().filter { it.isFile }) {
+            parser.parse(file.readText(Charsets.UTF_8))
+        }
+        return parser
     }
 }
