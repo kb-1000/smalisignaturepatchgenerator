@@ -10,7 +10,7 @@ grammar PatchDef;
 
 rootParser : (patch | whitespace)* EOF ;
 
-patch : 'patch' WHITESPACE* '(' WHITESPACE* StringLiteral WHITESPACE* ')' WHITESPACE* '{' WHITESPACE* patchBody whitespace* '}' NL ;
+patch : 'patch' WHITESPACE* '(' WHITESPACE* StringLiteral WHITESPACE* ')' WHITESPACE* '{' whitespace* patchBody whitespace* '}' NL ;
 
 patchBody : (assignment | whitespace)*;
 
