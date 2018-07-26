@@ -17,12 +17,12 @@ class Parser {
         for (ctx in parserContext.patch()) {
             patch(unescapeJavaString(ctx.StringLiteral().text)) {
                 ParseTreeWalker().walk(object : PatchDefBaseListener() {
-                    override fun exitHumanNameAssignment(ctx: PatchDefParser.HumanNameAssignmentContext?) {
-                        humanName = unescapeJavaString((ctx ?: return).StringLiteral().text)
+                    override fun exitHumanNameAssignment(ctx: PatchDefParser.HumanNameAssignmentContext) {
+                        humanName = unescapeJavaString(ctx.StringLiteral().text)
                     }
 
-                    override fun enterModifiedClassAsignment(ctx: PatchDefParser.ModifiedClassAsignmentContext?) {
-                        modifiedClass = unescapeJavaString((ctx ?: return).StringLiteral().text)
+                    override fun exitModifiedClassAssignment(ctx: PatchDefParser.ModifiedClassAssignmentContext) {
+                        modifiedClass = unescapeJavaString(ctx.StringLiteral().text)
                     }
                 }, ctx)
             }

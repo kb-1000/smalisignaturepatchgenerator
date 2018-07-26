@@ -15,10 +15,10 @@ patch : 'patch' WHITESPACE* '(' WHITESPACE* StringLiteral WHITESPACE* ')' WHITES
 patchBody : (statement | WHITESPACE)* ;
 
 statement : assignment NL+ ;
-assignment : (humanNameAssignment | modifiedClassAsignment) ;
+assignment : (humanNameAssignment | modifiedClassAssignment) ;
 
 humanNameAssignment : 'humanName' WHITESPACE* '=' WHITESPACE* StringLiteral ;
-modifiedClassAsignment : 'modifiedClass' WHITESPACE* '=' WHITESPACE StringLiteral;
+modifiedClassAssignment : 'modifiedClass' WHITESPACE* '=' WHITESPACE StringLiteral;
 
 whitespace : WHITESPACE | NL ;
 
