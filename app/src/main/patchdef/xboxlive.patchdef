@@ -1,4 +1,5 @@
 patch("xboxlive") {
     humanName = "Xbox Live"
     modifiedClass = "Lcom/microsoft/onlineid/internal/PackageInfoHelper;"
+    modifiedMethod = "getCurrentAppSignatures(Landroid/content/Context;)[Landroid/content/pm/Signature;"
 }

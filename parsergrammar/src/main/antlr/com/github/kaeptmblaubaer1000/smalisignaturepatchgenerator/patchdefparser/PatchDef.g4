@@ -15,10 +15,11 @@ patch : 'patch' WHITESPACE* '(' WHITESPACE* StringLiteral WHITESPACE* ')' WHITES
 patchBody : (statement | WHITESPACE)* ;
 
 statement : assignment NL+ ;
-assignment : (humanNameAssignment | modifiedClassAssignment) ;
+assignment : (humanNameAssignment | modifiedClassAssignment | modifiedMethodAssignment) ;
 
 humanNameAssignment : 'humanName' WHITESPACE* '=' WHITESPACE* StringLiteral ;
-modifiedClassAssignment : 'modifiedClass' WHITESPACE* '=' WHITESPACE StringLiteral;
+modifiedClassAssignment : 'modifiedClass' WHITESPACE* '=' WHITESPACE* StringLiteral;
+modifiedMethodAssignment : 'modifiedMethod' WHITESPACE* '=' WHITESPACE* StringLiteral;
 
 whitespace : WHITESPACE | NL ;
 
@@ -27,7 +28,7 @@ whitespace : WHITESPACE | NL ;
  */
 
 WHITESPACE : [ \t] ;
-NL : '\r' | '\n' | '\r\n' | WHITESPACE ';' WHITESPACE ;
+NL : '\r' | '\n' | '\r\n' | WHITESPACE* ';' WHITESPACE* ;
 
 // The following part is derived from
 // https://github.com/antlr/grammars-v4/blob/8d2396883090584f83ca4575edf74baa7ccc14f2/java8/Java8.g4

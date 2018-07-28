@@ -24,6 +24,10 @@ class Parser {
                     override fun exitModifiedClassAssignment(ctx: PatchDefParser.ModifiedClassAssignmentContext) {
                         modifiedClass = unqouteUnescapeJavaString(ctx.StringLiteral().text)
                     }
+
+                    override fun exitModifiedMethodAssignment(ctx: PatchDefParser.ModifiedMethodAssignmentContext) {
+                        modifiedMethod = unqouteUnescapeJavaString(ctx.StringLiteral().text)
+                    }
                 }, ctx)
             }
         }
