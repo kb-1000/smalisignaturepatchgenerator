@@ -13,6 +13,9 @@ object PatchDefCompiler {
     fun generate(input: File, output: File) {
         val patchDefs = parseFiles(input).patchDefs
         val signatureVerificationTypes = patchDefs.keys
+        if (signatureVerificationTypes.isEmpty()) {
+            throw EmptyPatchDefListNotAllowedException("You haven't added any PatchDefs, or they are all invalid. If you *have* added PatchDefs, look above for parser errors")
+        }
         val signatureVerificationTypesClassConstructor = FunSpec.constructorBuilder()
                 .addParameters(signatureVerificationTypes.map { ParameterSpec.builder(it, Boolean::class).defaultValue("false").build() })
 
@@ -39,9 +42,16 @@ object PatchDefCompiler {
         fileSpec.writeTo(output)
     }
 
+    class EmptyPatchDefListNotAllowedException : Throwable {
+        constructor(message: String?, cause: Throwable?) : super(message, cause)
+        constructor(message: String?) : super(message)
+        constructor(cause: Throwable?) : super(cause)
+        constructor() : super()
+    }
+
     fun parseFiles(dir: File): Parser {
         val parser = Parser()
-        for(file: File in dir.walk().filter { it.isFile }) {
+        for (file: File in dir.walk().filter { it.isFile }) {
             parser.parse(file.readText(Charsets.UTF_8))
         }
         return parser
