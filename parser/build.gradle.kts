@@ -13,3 +13,6 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlin_version}")
     implementation(project(":parsergrammar"))
 }
+
+java.setSourceCompatibility("1.8")
+java.setTargetCompatibility("1.8")

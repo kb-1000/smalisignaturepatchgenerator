@@ -16,19 +16,7 @@ class Parser {
         val parserContext = parser.rootParser()
         for (ctx in parserContext.patch()) {
             patch(unqouteUnescapeJavaString(ctx.StringLiteral().text)) {
-                ParseTreeWalker().walk(object : PatchDefBaseListener() {
-                    override fun exitHumanNameAssignment(ctx: PatchDefParser.HumanNameAssignmentContext) {
-                        humanName = unqouteUnescapeJavaString(ctx.StringLiteral().text)
-                    }
-
-                    override fun exitModifiedClassAssignment(ctx: PatchDefParser.ModifiedClassAssignmentContext) {
-                        modifiedClass = unqouteUnescapeJavaString(ctx.StringLiteral().text)
-                    }
-
-                    override fun exitModifiedMethodAssignment(ctx: PatchDefParser.ModifiedMethodAssignmentContext) {
-                        modifiedMethod = unqouteUnescapeJavaString(ctx.StringLiteral().text)
-                    }
-                }, ctx)
+                ParseTreeWalker().walk(PatchDefListenerImpl(this), ctx)
             }
         }
     }
