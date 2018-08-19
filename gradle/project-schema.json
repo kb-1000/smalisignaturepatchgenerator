@@ -247,7 +247,6 @@
         ],
         "configurations": [
             "annotationProcessor",
-            "antlr",
             "api",
             "apiElements",
             "archives",
@@ -335,6 +334,76 @@
             {
                 "type": "org.gradle.api.plugins.ExtraPropertiesExtension",
                 "target": "org.jetbrains.kotlin.scripting.gradle.ScriptingExtension",
+                "name": "ext"
+            },
+            {
+                "type": "org.gradle.api.plugins.ExtraPropertiesExtension",
+                "target": "org.gradle.api.tasks.SourceSet",
+                "name": "ext"
+            }
+        ]
+    },
+    ":parsergrammar": {
+        "conventions": [
+            {
+                "type": "org.gradle.api.plugins.BasePluginConvention",
+                "target": "org.gradle.api.Project",
+                "name": "base"
+            },
+            {
+                "type": "org.gradle.api.plugins.JavaPluginConvention",
+                "target": "org.gradle.api.Project",
+                "name": "java"
+            }
+        ],
+        "configurations": [
+            "annotationProcessor",
+            "antlr",
+            "api",
+            "apiElements",
+            "archives",
+            "compile",
+            "compileClasspath",
+            "compileOnly",
+            "default",
+            "implementation",
+            "runtime",
+            "runtimeClasspath",
+            "runtimeElements",
+            "runtimeOnly",
+            "testAnnotationProcessor",
+            "testCompile",
+            "testCompileClasspath",
+            "testCompileOnly",
+            "testImplementation",
+            "testRuntime",
+            "testRuntimeClasspath",
+            "testRuntimeOnly"
+        ],
+        "extensions": [
+            {
+                "type": "org.gradle.api.plugins.ExtraPropertiesExtension",
+                "target": "org.gradle.api.Project",
+                "name": "ext"
+            },
+            {
+                "type": "org.gradle.api.internal.plugins.DefaultArtifactPublicationSet",
+                "target": "org.gradle.api.Project",
+                "name": "defaultArtifacts"
+            },
+            {
+                "type": "org.gradle.api.plugins.ExtraPropertiesExtension",
+                "target": "org.gradle.api.internal.plugins.DefaultArtifactPublicationSet",
+                "name": "ext"
+            },
+            {
+                "type": "org.gradle.api.reporting.ReportingExtension",
+                "target": "org.gradle.api.Project",
+                "name": "reporting"
+            },
+            {
+                "type": "org.gradle.api.plugins.ExtraPropertiesExtension",
+                "target": "org.gradle.api.reporting.ReportingExtension",
                 "name": "ext"
             },
             {
