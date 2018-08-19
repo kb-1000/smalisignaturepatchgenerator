@@ -34,7 +34,7 @@ fun main(vararg args: String) {
                 .builder("exit${prop.capitalize()}Assignment")
                 .addModifiers(KModifier.OVERRIDE)
                 .addParameter("ctx", ClassName("com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.patchdefparser", "PatchDefParser", "${prop.capitalize()}AssignmentContext"))
-                .addCode("patchDef.%1N = unqouteUnescapeJavaString(ctx.StringLiteral().text)", prop)
+                .addCode("patchDef.%1N = unquoteUnescapeJavaString(ctx.StringLiteral().text)", prop)
                 .build())
     }
 

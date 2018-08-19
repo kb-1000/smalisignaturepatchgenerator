@@ -15,7 +15,7 @@ class Parser {
         val parser = PatchDefParser(tokens)
         val parserContext = parser.rootParser()
         for (ctx in parserContext.patch()) {
-            patch(unqouteUnescapeJavaString(ctx.StringLiteral().text)) {
+            patch(unquoteUnescapeJavaString(ctx.StringLiteral().text)) {
                 ParseTreeWalker().walk(PatchDefListenerImpl(this), ctx)
             }
         }
