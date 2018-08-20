@@ -13,11 +13,12 @@ import com.squareup.kotlinpoet.asTypeName
 import java.nio.file.Paths
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
+import kotlin.reflect.jvm.jvmErasure
 
 fun main(vararg args: String) {
     val kClass = PatchDef::class
 
-    val props = kClass.memberProperties.map(KProperty1<PatchDef, *>::name)
+    val props = kClass.memberProperties.filter { it.returnType.jvmErasure == String::class }.map(KProperty1<PatchDef, *>::name)
 
     val nullablePatchDefSpec = com.squareup.kotlinpoet.TypeSpec.classBuilder(ClassName("com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.patchdefparser", "NullablePatchDef"))
             .addProperties(props.map {
@@ -43,7 +44,7 @@ fun main(vararg args: String) {
                     .apply {
                         props.subList(0, props.size - 1).map { addCode("%1N = %1N ?: return null,\n", it) }
                         val lastProp = props.lastOrNull()
-                        if(lastProp != null) {
+                        if (lastProp != null) {
                             addCode("%1N = %1N ?: return null\n", lastProp)
                         }
                     }
