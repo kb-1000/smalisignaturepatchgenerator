@@ -15,6 +15,8 @@ import kotlin.reflect.full.memberProperties
 fun main(vararg args: String) {
     val kClass = PatchDef::class
 
+    val props = kClass.memberProperties.map(KProperty1<PatchDef, *>::name)
+
     val patchDefListenerBuilder = com.squareup.kotlinpoet.TypeSpec
             .classBuilder(ClassName("com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.patchdefparser", "PatchDefListenerImpl"))
             .superclass(PatchDefBaseListener::class)
@@ -27,9 +29,7 @@ fun main(vararg args: String) {
                     .addParameter("patchDef", NullablePatchDef::class)
                     .build())
 
-    val props = kClass.memberProperties.map(KProperty1<PatchDef, *>::name)
-
-    for(prop in props) {
+    for (prop in props) {
         patchDefListenerBuilder.addFunction(FunSpec
                 .builder("exit${prop.capitalize()}Assignment")
                 .addModifiers(KModifier.OVERRIDE)

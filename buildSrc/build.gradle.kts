@@ -1,7 +1,7 @@
 apply(from = "../dependencies.gradle.kts")
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.2.51"
+    id("org.jetbrains.kotlin.jvm") version "1.2.60"
 }
 
 
