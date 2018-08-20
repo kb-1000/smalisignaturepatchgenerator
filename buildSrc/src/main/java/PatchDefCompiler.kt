@@ -26,12 +26,21 @@ object PatchDefCompiler {
                 .addProperties(signatureVerificationTypes.map { PropertySpec.varBuilder(it, Boolean::class).initializer(it).build() })
                 .build()
 
-        val identificationClassDefRewriterClass = TypeSpec.classBuilder(ClassName("com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated", "IdentificationClassDefRewriter"))
-                .superclass(ClassName("org.jf.dexlib2.rewriter", "ClassDefRewriter"))
+        val methodClassName = ClassName("org.jf.dexlib2.iface", "Method")
+
+        val identificationClassDefRewriterClass = TypeSpec.classBuilder(ClassName("com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated", "IdentificationMethodRewriter"))
+                .superclass(ClassName("org.jf.dexlib2.rewriter", "MethodRewriter"))
                 .primaryConstructor(FunSpec.constructorBuilder()
                         .addParameter("rewriters", ClassName("org.jf.dexlib2.rewriter", "Rewriters"))
                         .build())
                 .addSuperclassConstructorParameter("rewriters")
+                .addFunction(FunSpec
+                        .builder("rewrite")
+                        .addParameter("method", methodClassName)
+                        .returns(methodClassName)
+                        .addModifiers(KModifier.OVERRIDE)
+                        .addStatement("return super.rewrite(method)")
+                        .build())
                 .build()
 
 
@@ -42,7 +51,7 @@ object PatchDefCompiler {
         fileSpec.writeTo(output)
     }
 
-    class EmptyPatchDefListNotAllowedException : Throwable {
+    class EmptyPatchDefListNotAllowedException : Exception {
         constructor(message: String?, cause: Throwable?) : super(message, cause)
         constructor(message: String?) : super(message)
         constructor(cause: Throwable?) : super(cause)
