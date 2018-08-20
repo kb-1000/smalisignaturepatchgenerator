@@ -17,7 +17,7 @@ data class NullablePatchDef(
     }
 }
 
-class PatchDefListenerImpl(val patchDef: NullablePatchDef) : PatchDefBaseListener() {
+class PatchDefListenerImpl(private val patchDef: NullablePatchDef) : PatchDefBaseListener() {
     override fun exitHumanNameAssignment(ctx: PatchDefParser.HumanNameAssignmentContext) {
         patchDef.humanName = unquoteUnescapeJavaString(ctx.StringLiteral().text)
     }

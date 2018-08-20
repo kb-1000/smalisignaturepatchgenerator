@@ -84,6 +84,7 @@ $end"""
             .superclass(PatchDefBaseListener::class)
             .addProperty(PropertySpec
                     .builder("patchDef", NullablePatchDef::class)
+                    .addModifiers(KModifier.PRIVATE)
                     .initializer("patchDef")
                     .build())
             .primaryConstructor(FunSpec
