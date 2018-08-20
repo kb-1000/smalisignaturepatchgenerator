@@ -2,6 +2,7 @@ package com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.patchdefparse
 
 
 // The following is https://gist.github.com/uklimaschewski/6741769 transformed with j2k, with removed Kotlin errors and no "\f" support.
+// Also with added \$ support
 /**
  * Unescapes a string that contains standard Java escape sequences.
  *
@@ -53,6 +54,7 @@ fun unescapeJavaString(st: String): String {
             else if (nextChar == 't') ch = '\t'
             else if (nextChar == '\"') ch = '\"'
             else if (nextChar == '\'') ch = '\''
+            else if (nextChar == '$') ch = '$'
             // Hex Unicode: u????
             else if (nextChar == 'u') {
                 if (i >= st.length - 5) {
