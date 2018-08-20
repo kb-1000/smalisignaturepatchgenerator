@@ -1,3 +1,4 @@
+@file:JvmName("Main")
 package com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.updateParser
 
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.patchdefparser.NullablePatchDef

@@ -15,7 +15,7 @@ dependencies {
 }
 
 application {
-    mainClassName = "com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.updateParser.MainKt"
+    mainClassName = "com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.updateParser.Main"
 }
 
 java.setSourceCompatibility("1.8")
