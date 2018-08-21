@@ -1,4 +1,5 @@
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.patchdefparser.Parser
+import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.patchdefparser.PatchDef
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
@@ -12,6 +13,7 @@ object PatchDefCompiler {
     @JvmStatic
     fun generate(input: File, output: File) {
         val patchDefs = parseFiles(input).patchDefs
+        val reversedPatchDefs = mapOf(*patchDefs.map { Pair(it.value, it.key) }.toTypedArray())
         val signatureVerificationTypes = patchDefs.keys
         if (signatureVerificationTypes.isEmpty()) {
             throw EmptyPatchDefListNotAllowedException("You haven't added any PatchDefs, or they are all invalid. If you *have* added PatchDefs, look above for parser errors")
@@ -19,7 +21,8 @@ object PatchDefCompiler {
         val signatureVerificationTypesClassConstructor = FunSpec.constructorBuilder()
                 .addParameters(signatureVerificationTypes.map { ParameterSpec.builder(it, Boolean::class).defaultValue("false").build() })
 
-        val signatureVerificationTypesClass = TypeSpec.classBuilder(ClassName("com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated", "SignatureVerificationTypes"))
+        val signatureVerificationTypesClassName = ClassName("com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated", "SignatureVerificationTypes")
+        val signatureVerificationTypesClass = TypeSpec.classBuilder(signatureVerificationTypesClassName)
                 .primaryConstructor(signatureVerificationTypesClassConstructor
                         .build())
                 .addModifiers(KModifier.DATA)
@@ -28,24 +31,61 @@ object PatchDefCompiler {
 
         val methodClassName = ClassName("org.jf.dexlib2.iface", "Method")
 
-        val identificationClassDefRewriterClass = TypeSpec.classBuilder(ClassName("com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated", "IdentificationMethodRewriter"))
+        val identificationMethodRewriterClass = TypeSpec.classBuilder(ClassName("com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated", "IdentificationMethodRewriter"))
                 .superclass(ClassName("org.jf.dexlib2.rewriter", "MethodRewriter"))
                 .primaryConstructor(FunSpec.constructorBuilder()
                         .addParameter("rewriters", ClassName("org.jf.dexlib2.rewriter", "Rewriters"))
+                        .addParameter("signatureVerificationTypes", signatureVerificationTypesClassName)
                         .build())
                 .addSuperclassConstructorParameter("rewriters")
+                .addProperty(PropertySpec
+                        .builder("signatureVerificationTypes", signatureVerificationTypesClassName)
+                        .initializer("signatureVerificationTypes")
+                        .build())
                 .addFunction(FunSpec
                         .builder("rewrite")
                         .addParameter("method", methodClassName)
                         .returns(methodClassName)
                         .addModifiers(KModifier.OVERRIDE)
+                        .addCode("try {%>\n")
+                        .addCode("when (method.definingClass) {%>\n")
+                        .apply {
+                            val map = mutableMapOf<String, MutableList<PatchDef>>()
+                            for (patchDef in patchDefs.values){
+                                map.getOrPut(patchDef.modifiedClass, ::mutableListOf).add(patchDef)
+                            }
+                            for((clazz, patchDefsForClass) in map) {
+                                addCode("%1S -> {%>\n", clazz)
+                                addCode("when (%1T.getMethodDescriptor(method)) {%>\n", ClassName("org.jf.dexlib2.util", "ReferenceUtil"))
+
+                                for(patchDef in patchDefsForClass) {
+                                    addCode("%1S -> {%>\n", patchDef.modifiedMethod)
+
+                                    addCode("signatureVerificationTypes.%1N = true\n", reversedPatchDefs[patchDef]!!)
+
+                                    addCode("%<}\n")
+                                }
+
+                                addCode("%<}\n")
+                                addCode("%<}\n")
+                            }
+                        }
+                        .addCode("else -> throw IgnoreThisMethodException()\n")
+                        .addCode("%<}\n")
+                        .addCode("%<} catch (e: IgnoreThisMethodException) {\n}\n")
                         .addStatement("return super.rewrite(method)")
+                        .build())
+
+                .addType(TypeSpec
+                        .classBuilder(ClassName("com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated", "IdentificationMethodRewriter", "IgnoreThisMethodException"))
+                        .superclass(Exception::class)
+                        .addModifiers(KModifier.PRIVATE)
                         .build())
                 .build()
 
 
         val fileSpec = FileSpec.builder("com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated", "CompiledPatchDef")
-                .addType(identificationClassDefRewriterClass)
+                .addType(identificationMethodRewriterClass)
                 .addType(signatureVerificationTypesClass)
                 .build()
         fileSpec.writeTo(output)
