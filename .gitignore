@@ -1,6 +1,8 @@
 .DS_Store
 Thumbs.db
 
+/core/src/main/java/com/github/kaeptmblaubaer1000/smalisignaturepatchgenerator/core/generated/
+
 
 # ---> Android
 # Built application files

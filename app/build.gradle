@@ -4,9 +4,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 
-def patchDefGeneratedDirectory = new File(projectDir, "build/generated/source/patchdef")
-def patchDefSourceDirectory = new File(projectDir, "src/main/patchdef")
-
 android {
     compileSdkVersion = 27
     buildToolsVersion = "27.0.3"
@@ -29,9 +26,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    sourceSets {
-        main.java.srcDirs += patchDefGeneratedDirectory
-        main.kotlin.srcDirs += patchDefGeneratedDirectory
+    packagingOptions {
+        exclude("*.version")
+        exclude("androidsuppoermultidexversion.txt")
     }
 }
 
@@ -39,13 +36,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlin_version}")
-    implementation("org.smali:baksmali:${smali_version}") {
-        exclude group: "com.google.guava"
-    }
-
-    // The following one block contains updates to dependencies of other dependencies.
-    implementation("com.beust:jcommander:1.74")
-    implementation("com.google.guava:guava:22.0-android")
+    implementation("com.google.guava:guava:22.0-android") // TODO: update using MultiDex
 
     implementation("com.android.support:appcompat-v7:27.1.1")
     implementation("com.android.support.constraint:constraint-layout:1.1.2")
@@ -53,15 +44,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation(project(":parser"))
-}
 
-
-tasks.create("compilePatchDef") {
-    doFirst {
-        PatchDefCompiler.generate(patchDefSourceDirectory, patchDefGeneratedDirectory)
+    implementation(project(":core")) {
+        exclude(group: "com.google.guava")
     }
-}
-preBuild {
-    dependsOn(compilePatchDef)
 }
