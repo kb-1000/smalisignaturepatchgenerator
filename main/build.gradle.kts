@@ -12,4 +12,7 @@ application {
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
     implementation(project(":mainlib"))
+
+    
+    implementation(project(":cli"))
 }

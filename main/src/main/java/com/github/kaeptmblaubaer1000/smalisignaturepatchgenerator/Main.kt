@@ -5,7 +5,8 @@ import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.mainlib.IMain
 class Main {
     companion object : IMain {
         val mains: Map<String, IMain> = mapOf(
-                "main" to Main
+                "main" to Main,
+                "cli" to com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.cli.Main
         )
 
         @JvmStatic
@@ -18,7 +19,7 @@ class Main {
 
         private fun printCommandNames() {
             println("Available commands:")
-            for((name, command) in mains) {
+            for ((name, command) in mains) {
                 println("\t$name")
             }
         }
