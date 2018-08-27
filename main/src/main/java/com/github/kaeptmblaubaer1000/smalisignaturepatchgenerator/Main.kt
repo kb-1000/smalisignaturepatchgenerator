@@ -11,9 +11,16 @@ class Main {
 
         @JvmStatic
         override fun main(args: Array<String>) {
-            if (args.isEmpty()) {
-                println("Please give a command name as the first parameter to this program.")
-                printCommandNames()
+            when {
+                args.isEmpty() -> {
+                    println("Please give a command name as the first parameter to this program.")
+                    printCommandNames()
+                }
+                args[0] !in mains -> {
+                    println("Command \"${args[0]}\" not found.")
+                    printCommandNames()
+                }
+                else -> mains[args[0]]?.main(args.drop(1).toTypedArray())
             }
         }
 
