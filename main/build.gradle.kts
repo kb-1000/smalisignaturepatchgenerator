@@ -14,10 +14,12 @@ val transformClassesWithProguard = task("transformClassesWithProguard", proguard
     libraryjars(arrayOf("${System.getProperty("java.home")}/lib/rt.jar", "${System.getProperty("java.home")}/lib/jce.jar"))
     outjars(buildDir.toPath().resolve("proguard").resolve("SmaliSignaturePatchGenerator.jar"))
 
-    keep("""class com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.Main {
-    public static void main(String[]);
-}""")
+    keepclasseswithmembers("""public class com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.Main {
+    public static void main(java.lang.String[]);
+} """)
     dontobfuscate()
+    keepattributes("org.jetbrains.annotations.Nullable")
+    keepattributes("org.jetbrains.annotations.NotNull")
 }
 
 application {
