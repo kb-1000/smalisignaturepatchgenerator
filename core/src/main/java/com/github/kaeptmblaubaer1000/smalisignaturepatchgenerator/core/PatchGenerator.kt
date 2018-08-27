@@ -15,12 +15,12 @@ class PatchGenerator {
     }
 
     @Throws(InvalidApkFileException::class)
-    fun loadApkFile(file: File): DexFile {
+    fun loadApkFile(file: File): DexFileWrapper {
         val zipFile = java.util.zip.ZipFile(file, ZipFile.OPEN_READ) //TODO: catch errors
         val zipEntry = zipFile.getEntry("classes.dex")
                 ?: throw InvalidApkFileException("The APK file is invalid because it has no classes.dex.")
         val inputStream = zipFile.getInputStream(zipEntry)
-        return DexBackedDexFile.fromInputStream(null, inputStream)
+        return DexFileWrapper(DexBackedDexFile.fromInputStream(null, inputStream))
     }
 
 
