@@ -9,7 +9,7 @@ class Main {
         @JvmStatic
         override fun main(args: Array<String>) {
             if (args.size != 2) {
-                //TODO: print usage
+                printUsage()
             } else {
                 val patchGenerator = PatchGenerator()
                 val dexFile = patchGenerator.loadApkFile(File(args[0]))
@@ -18,5 +18,9 @@ class Main {
 
         override val description: String
             get() = "The basic command line interface"
+
+        private fun printUsage() {
+            println("Usage: <apk-file> <patch-zip-file>")
+        }
     }
 }

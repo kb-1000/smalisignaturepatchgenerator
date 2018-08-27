@@ -6,7 +6,7 @@ plugins {
 val kotlin_version: String by rootProject.extra
 
 tasks.withType(CreateStartScripts::class.java).getByName("startScripts") {
-    classpath = files("lib/SmaliSignaturePatchGenerator.jar") //TODO: include this after adding ProGuard
+    classpath = files("lib/SmaliSignaturePatchGenerator.jar")
 }
 
 val transformClassesWithProguard = task("transformClassesWithProguard", proguard.gradle.ProGuardTask::class) {
