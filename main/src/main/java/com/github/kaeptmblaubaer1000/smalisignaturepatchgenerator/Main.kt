@@ -27,8 +27,11 @@ class Main {
         private fun printCommandNames() {
             println("Available commands:")
             for ((name, command) in mains) {
-                println("\t$name")
+                println("\t$name: ${command.description}")
             }
         }
+
+        override val description: String
+            get() = "This program itself"
     }
 }
