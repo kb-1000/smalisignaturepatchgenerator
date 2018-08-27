@@ -13,7 +13,9 @@ val kotlin_version: String by rootProject.extra
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlin_version}")
-    implementation(project(":parsergrammar"))
+    implementation(project(":parsergrammar")) {
+        exclude(group = "org.antlr", module = "antlr4")
+    }
 }
 
 tasks.asMap.map {

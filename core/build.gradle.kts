@@ -19,7 +19,7 @@ dependencies {
     }
 
     // The following one block contains updates to dependencies of other dependencies.
-    implementation("com.beust:jcommander:1.74")
+    implementation("com.beust:jcommander:1.71")
     implementation("com.google.guava:guava:26.0-jre")
 
     implementation(project(":parser"))
