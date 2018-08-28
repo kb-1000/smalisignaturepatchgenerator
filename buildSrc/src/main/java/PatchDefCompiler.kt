@@ -1,10 +1,12 @@
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.patchdefparser.Parser
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.patchdefparser.PatchDef
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import java.io.File
@@ -51,14 +53,14 @@ object PatchDefCompiler {
                         .addCode("when (method.definingClass) {%>\n")
                         .apply {
                             val map = mutableMapOf<String, MutableList<PatchDef>>()
-                            for (patchDef in patchDefs.values){
+                            for (patchDef in patchDefs.values) {
                                 map.getOrPut(patchDef.modifiedClass, ::mutableListOf).add(patchDef)
                             }
-                            for((clazz, patchDefsForClass) in map) {
+                            for ((clazz, patchDefsForClass) in map) {
                                 addCode("%1S -> {%>\n", clazz)
                                 addCode("when (%1T.getMethodDescriptor(method)) {%>\n", ClassName("org.jf.dexlib2.util", "ReferenceUtil"))
 
-                                for(patchDef in patchDefsForClass) {
+                                for (patchDef in patchDefsForClass) {
                                     addCode("%1S -> {%>\n", patchDef.modifiedMethod)
 
                                     addCode("signatureVerificationTypes.%1N = true\n", reversedPatchDefs[patchDef]!!)
@@ -87,6 +89,22 @@ object PatchDefCompiler {
         val fileSpec = FileSpec.builder("com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated", "CompiledPatchDef")
                 .addType(identificationMethodRewriterClass)
                 .addType(signatureVerificationTypesClass)
+                .addProperty(PropertySpec
+                        .builder("signatureVerificationTypesHumanNames", ParameterizedTypeName.get(Map::class, String::class, String::class))
+                        .initializer(CodeBlock.builder()
+                                .add("mapOf(\n")
+                                .apply {
+                                    val patchDefList = patchDefs.toList()
+                                    for ((name, patchDef) in patchDefList.dropLast(1)) {
+                                        add("%1S to %2S,\n", name, patchDef.humanName)
+                                    }
+                                    for ((name, patchDef) in patchDefList.takeLast(1)) {
+                                        add("%1S to %2S\n", name, patchDef.humanName)
+                                    }
+                                }
+                                .add("%<%<)\n%>%>")
+                                .build())
+                        .build())
                 .build()
         fileSpec.writeTo(output)
     }

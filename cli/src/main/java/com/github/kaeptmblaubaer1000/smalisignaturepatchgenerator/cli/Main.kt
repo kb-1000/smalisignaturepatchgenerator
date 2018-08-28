@@ -13,6 +13,8 @@ class Main {
             } else {
                 val patchGenerator = PatchGenerator()
                 val dexFile = patchGenerator.loadApkFile(File(args[0]))
+                val signatureVerificationTypes = patchGenerator.identifySignatureVerificationTypes(dexFile)
+                println(signatureVerificationTypes)
             }
         }
 
