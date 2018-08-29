@@ -11,7 +11,7 @@ tasks.withType(CreateStartScripts::class.java).getByName("startScripts") {
 
 val transformClassesWithProguard = task("transformClassesWithProguard", proguard.gradle.ProGuardTask::class) {
     injars(project.tasks.getAt(JavaPlugin.JAR_TASK_NAME).outputs.files.plus(project.configurations.getByName(JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME)))
-    libraryjars(arrayOf("${System.getProperty("java.home")}/lib/rt.jar", "${System.getProperty("java.home")}/lib/jce.jar"))
+    libraryjars(arrayOf("${System.getProperty("java.home")}/lib/rt.jar", "${System.getProperty("java.home")}/lib/jce.jar", "${System.getProperty("java.home")}/jmods/java.base.jmod"))
     outjars(buildDir.toPath().resolve("proguard").resolve("SmaliSignaturePatchGenerator.jar"))
 
     keepclasseswithmembers("""public class com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.Main {
