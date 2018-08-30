@@ -40,8 +40,9 @@ distributions {
                 it.name.endsWith(".jar") && it.name != "SmaliSignaturePatchGenerator.jar"
             }
 
-            from(transformClassesWithProguard) {
-                into("lib") {
+
+            into("lib") {
+                from(transformClassesWithProguard) {
                     include("SmaliSignaturePatchGenerator.jar")
                 }
             }
