@@ -3,12 +3,10 @@ plugins {
     id("org.jetbrains.kotlin.jvm")
 }
 
-val kotlin_version: String by rootProject.extra
-
 val kotlinPoetVersion: String by rootProject.extra
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("com.squareup:kotlinpoet:$kotlinPoetVersion")
     implementation(project(":parser"))
     implementation(project(":parsergrammar"))

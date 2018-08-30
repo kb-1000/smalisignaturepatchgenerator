@@ -3,8 +3,6 @@ plugins {
     id("org.jetbrains.kotlin.jvm")
 }
 
-val kotlin_version: String by rootProject.extra
-
 tasks.withType(CreateStartScripts::class.java).getByName("startScripts") {
     classpath = files("lib/SmaliSignaturePatchGenerator.jar")
 }
@@ -51,7 +49,7 @@ distributions {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation(project(":mainlib"))
 
 

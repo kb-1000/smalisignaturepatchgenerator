@@ -9,10 +9,8 @@ repositories {
     jcenter()
 }
 
-val kotlin_version: String by rootProject.extra
-
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlin_version}")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation(project(":parsergrammar")) {
         exclude(group = "org.antlr", module = "antlr4")
     }

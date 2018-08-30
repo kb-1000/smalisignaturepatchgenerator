@@ -9,7 +9,6 @@ repositories {
     jcenter()
 }
 
-val kotlin_version: String by rootProject.extra
 val kotlinPoetVersion: String by rootProject.extra
 
 dependencies {
