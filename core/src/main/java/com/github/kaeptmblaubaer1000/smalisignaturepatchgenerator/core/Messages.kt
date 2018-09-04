@@ -4,4 +4,4 @@ interface Message
 interface InputMessage : Message
 interface OutputMessage : Message
 
-class Stop : InputMessage
+object Stop : InputMessage

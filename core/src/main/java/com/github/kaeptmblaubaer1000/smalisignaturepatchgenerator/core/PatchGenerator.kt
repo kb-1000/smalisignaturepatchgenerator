@@ -54,4 +54,8 @@ class PatchGenerator : Runnable {
     fun start() {
         thread.start()
     }
+
+    fun join() {
+        thread.join()
+    }
 }
