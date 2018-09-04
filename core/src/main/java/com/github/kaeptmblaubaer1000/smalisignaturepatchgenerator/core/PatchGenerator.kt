@@ -4,9 +4,16 @@ import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated
 import org.jf.dexlib2.dexbacked.DexBackedDexFile
 import org.jf.dexlib2.rewriter.DexRewriter
 import java.io.File
+import java.util.concurrent.BlockingQueue
+import java.util.concurrent.SynchronousQueue
 import java.util.zip.ZipFile
 
-class PatchGenerator {
+class PatchGenerator : Runnable {
+    private val thread = Thread(this)
+
+    val inputQueue: BlockingQueue<InputMessage> = SynchronousQueue(true)
+    val outputQueue: BlockingQueue<OutputMessage> = SynchronousQueue(true)
+
     fun identifySignatureVerificationTypes(dexFile: DexFileWrapper): Pair<DexFileWrapper, SignatureVerificationTypes> {
         val signatureVerificationTypes = SignatureVerificationTypes()
         val rebuiltDexFile = rebuildDexFile(DexRewriter(IdentificationRewriterModule(signatureVerificationTypes)).rewriteDexFile(dexFile.dexFile))
@@ -30,5 +37,21 @@ class PatchGenerator {
         constructor(message: String) : super(message)
         constructor(message: String, cause: Throwable) : super(message, cause)
         constructor(cause: Throwable) : super(cause)
+    }
+
+    override fun run() {
+        try {
+            loop@ while (true) {
+                val message = inputQueue.take()
+                when (message) {
+                    is Stop -> break@loop
+                }
+            }
+        } catch (e: InterruptedException) {
+        }
+    }
+
+    fun start() {
+        thread.start()
     }
 }

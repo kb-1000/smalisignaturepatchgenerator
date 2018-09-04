@@ -12,6 +12,7 @@ class Main {
                 printUsage()
             } else {
                 val patchGenerator = PatchGenerator()
+                patchGenerator.start()
                 val dexFile = patchGenerator.loadApkFile(File(args[0]))
                 val signatureVerificationTypes = patchGenerator.identifySignatureVerificationTypes(dexFile)
                 println(signatureVerificationTypes)
