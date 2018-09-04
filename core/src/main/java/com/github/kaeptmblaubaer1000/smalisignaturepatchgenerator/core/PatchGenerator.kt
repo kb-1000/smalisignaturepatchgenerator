@@ -45,9 +45,11 @@ class PatchGenerator : Runnable {
                 val message = inputQueue.take()
                 when (message) {
                     is Stop -> break@loop
+                    else -> throw UnsupportedOperationException("\"${message::class.java.simpleName}\" is currently not implemented.")
                 }
             }
-        } catch (e: InterruptedException) {
+        } catch (e: Throwable) {
+            outputQueue.addAll(List(10) { null as OutputMessage? }) // To ensure any read will not block but fail.
         }
     }
 
