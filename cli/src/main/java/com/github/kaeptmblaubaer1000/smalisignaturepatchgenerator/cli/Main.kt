@@ -1,5 +1,6 @@
 package com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.cli
 
+import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.ChangeMainApk
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.PatchGenerator
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.Stop
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.mainlib.IMain
@@ -14,11 +15,10 @@ class Main {
             } else {
                 val patchGenerator = PatchGenerator()
                 patchGenerator.start()
-                val dexFile = patchGenerator.loadApkFile(File(args[0]))
-                val signatureVerificationTypes = patchGenerator.identifySignatureVerificationTypes(dexFile)
-                println(signatureVerificationTypes)
+                patchGenerator.inputQueue.put(ChangeMainApk(File(args[0])))
                 patchGenerator.inputQueue.put(Stop)
                 patchGenerator.join()
+                println(patchGenerator.identifiedSignatureVerificationTypes)
             }
         }
 
