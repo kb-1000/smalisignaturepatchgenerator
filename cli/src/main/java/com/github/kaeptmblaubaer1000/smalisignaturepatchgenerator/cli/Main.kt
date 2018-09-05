@@ -2,6 +2,7 @@ package com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.cli
 
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.ChangeMainApk
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.ChangeSignatureApk
+import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.Generate
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.PatchGenerator
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.Stop
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.mainlib.IMain
@@ -18,6 +19,7 @@ class Main {
                 patchGenerator.start()
                 patchGenerator.inputQueue.put(ChangeMainApk(File(args[0])))
                 patchGenerator.inputQueue.put(ChangeSignatureApk(File(args[1])))
+                patchGenerator.inputQueue.put(Generate(File(args[2])))
                 patchGenerator.inputQueue.put(Stop)
                 patchGenerator.join()
                 println(patchGenerator.identifiedSignatureVerificationTypes)

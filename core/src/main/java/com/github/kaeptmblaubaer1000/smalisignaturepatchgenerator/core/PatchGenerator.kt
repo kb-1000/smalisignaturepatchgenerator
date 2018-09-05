@@ -6,15 +6,18 @@ import org.jf.dexlib2.dexbacked.DexBackedDexFile
 import org.jf.dexlib2.iface.DexFile
 import org.jf.dexlib2.rewriter.DexRewriter
 import java.io.File
+import java.io.FileOutputStream
 import java.util.concurrent.BlockingQueue
-import java.util.concurrent.SynchronousQueue
+import java.util.concurrent.LinkedBlockingQueue
+import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
+import java.util.zip.ZipOutputStream
 
 class PatchGenerator(val signatureLoaderParameter: Any? = null) : Runnable {
     private val thread = Thread(this)
 
-    val inputQueue: BlockingQueue<InputMessage> = SynchronousQueue(true)
-    val outputQueue: BlockingQueue<OutputMessage> = SynchronousQueue(true)
+    val inputQueue: BlockingQueue<InputMessage> = LinkedBlockingQueue()
+    val outputQueue: BlockingQueue<OutputMessage> = LinkedBlockingQueue()
 
     private fun identifySignatureVerificationTypes(dexFile: DexFile): Pair<DexFile, SignatureVerificationTypes> {
         val signatureVerificationTypes = SignatureVerificationTypes()
@@ -63,11 +66,22 @@ class PatchGenerator(val signatureLoaderParameter: Any? = null) : Runnable {
                     is Stop -> break@loop
                     is ChangeMainApk -> loadMainApkFile(message.file)
                     is ChangeSignatureApk -> loadSignatureApk(message.file)
+                    is Generate -> generatePatch(message.file)
                     else -> throw UnsupportedOperationException("\"${message::class.java.simpleName}\" is currently not implemented.")
                 }
             }
         } catch (e: Throwable) {
             outputQueue.addAll(List(10) { null as OutputMessage? }) // To ensure any read will not block but fail.
+            throw e
+        }
+    }
+
+    private fun generatePatch(file: File) {
+        FileOutputStream(file).use { fileOutputStream ->
+            ZipOutputStream(fileOutputStream).use { topLevelZipOutputStream ->
+                topLevelZipOutputStream.putNextEntry(ZipEntry("patch.txt"))
+                topLevelZipOutputStream.bufferedWriter(Charsets.UTF_8)
+            }
         }
     }
 

@@ -9,3 +9,4 @@ interface OutputMessage : Message
 object Stop : InputMessage
 data class ChangeMainApk(val file: File) : InputMessage
 data class ChangeSignatureApk(val file: File) : InputMessage
+data class Generate(val file: File) : InputMessage
