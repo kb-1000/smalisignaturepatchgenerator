@@ -71,7 +71,6 @@ class PatchGenerator(val signatureLoaderParameter: Any? = null) : Runnable {
                 }
             }
         } catch (e: Throwable) {
-            outputQueue.addAll(List(10) { null as OutputMessage? }) // To ensure any read will not block but fail.
             throw e
         }
     }
