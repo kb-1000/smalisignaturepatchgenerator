@@ -25,6 +25,7 @@ dependencies {
     implementation("com.google.guava:guava:26.0-jre")
 
     implementation(project(":parser"))
+    compileOnly(project(":apksigLoader"))
 }
 
 val patchDefGeneratedDirectory = File(projectDir, "src/main/java")

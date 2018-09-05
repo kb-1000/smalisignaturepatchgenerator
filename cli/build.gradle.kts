@@ -13,4 +13,6 @@ dependencies {
 
     implementation(project(":core"))
     implementation(project(":mainlib"))
+
+    implementation(project(":apksigLoader"))
 }

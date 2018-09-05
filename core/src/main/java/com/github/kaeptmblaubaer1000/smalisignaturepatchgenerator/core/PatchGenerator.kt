@@ -1,6 +1,7 @@
 package com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core
 
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated.SignatureVerificationTypes
+import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.signature.SignatureLoader
 import org.jf.dexlib2.dexbacked.DexBackedDexFile
 import org.jf.dexlib2.iface.DexFile
 import org.jf.dexlib2.rewriter.DexRewriter
@@ -9,7 +10,7 @@ import java.util.concurrent.BlockingQueue
 import java.util.concurrent.SynchronousQueue
 import java.util.zip.ZipFile
 
-class PatchGenerator : Runnable {
+class PatchGenerator(val signatureLoaderParameter: Any? = null) : Runnable {
     private val thread = Thread(this)
 
     val inputQueue: BlockingQueue<InputMessage> = SynchronousQueue(true)
@@ -39,6 +40,12 @@ class PatchGenerator : Runnable {
         this.identifiedSignatureVerificationTypes = ret.second
     }
 
+    private var signatures: List<ByteArray>? = null
+
+    private fun loadSignatureApk(file: File) {
+        signatures = SignatureLoader.loadSignature(file, signatureLoaderParameter)
+    }
+
 
     @Suppress("UNUSED") // The additional constructors should be there once they are used.
     class InvalidApkFileException : Exception {
@@ -55,6 +62,7 @@ class PatchGenerator : Runnable {
                 when (message) {
                     is Stop -> break@loop
                     is ChangeMainApk -> loadMainApkFile(message.file)
+                    is ChangeSignatureApk -> loadSignatureApk(message.file)
                     else -> throw UnsupportedOperationException("\"${message::class.java.simpleName}\" is currently not implemented.")
                 }
             }
