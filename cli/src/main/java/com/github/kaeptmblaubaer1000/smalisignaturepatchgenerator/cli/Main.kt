@@ -1,6 +1,7 @@
 package com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.cli
 
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.ChangeMainApk
+import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.ChangeSignatureApk
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.PatchGenerator
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.Stop
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.mainlib.IMain
@@ -10,12 +11,13 @@ class Main {
     companion object : IMain {
         @JvmStatic
         override fun main(args: Array<String>) {
-            if (args.size != 2) {
+            if (args.size != 3) {
                 printUsage()
             } else {
                 val patchGenerator = PatchGenerator()
                 patchGenerator.start()
                 patchGenerator.inputQueue.put(ChangeMainApk(File(args[0])))
+                patchGenerator.inputQueue.put(ChangeSignatureApk(File(args[1])))
                 patchGenerator.inputQueue.put(Stop)
                 patchGenerator.join()
                 println(patchGenerator.identifiedSignatureVerificationTypes)
