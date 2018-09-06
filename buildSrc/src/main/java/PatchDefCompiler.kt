@@ -58,7 +58,7 @@ object PatchDefCompiler {
                             }
                             for ((clazz, patchDefsForClass) in map) {
                                 addCode("%1S -> {%>\n", clazz)
-                                addCode("when (%1T.getMethodDescriptor(method)) {%>\n", ClassName("org.jf.dexlib2.util", "ReferenceUtil"))
+                                addCode("when (%1T.getMethodDescriptor(method, true)) {%>\n", ClassName("org.jf.dexlib2.util", "ReferenceUtil"))
 
                                 for (patchDef in patchDefsForClass) {
                                     addCode("%1S -> {%>\n", patchDef.modifiedMethod)
