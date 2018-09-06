@@ -14,7 +14,7 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import java.util.zip.ZipOutputStream
 
-class PatchGenerator(val signatureLoaderParameter: Any? = null) : Runnable {
+class PatchGenerator(val signatureLoaderParameter: Any? = null, val signatureVerificationTypesCallback: (SignatureVerificationTypes) -> Unit = {}) : Runnable {
     private val thread = Thread(this)
 
     val inputQueue: BlockingQueue<InputMessage> = LinkedBlockingQueue()
@@ -41,7 +41,10 @@ class PatchGenerator(val signatureLoaderParameter: Any? = null) : Runnable {
         val inputStream = zipFile.getInputStream(zipEntry)
         val ret = identifySignatureVerificationTypes(DexBackedDexFile(null, ByteStreams.toByteArray(inputStream)))
         this.dexFile = ret.first
-        this.identifiedSignatureVerificationTypes = ret.second
+        if(identifiedSignatureVerificationTypes != ret.second) {
+            identifiedSignatureVerificationTypes = ret.second
+            signatureVerificationTypesCallback(identifiedSignatureVerificationTypes)
+        }
     }
 
     private var signatures: List<ByteArray>? = null
@@ -67,7 +70,7 @@ class PatchGenerator(val signatureLoaderParameter: Any? = null) : Runnable {
                     is Stop -> break@loop
                     is ChangeMainApk -> loadMainApkFile(message.file)
                     is ChangeSignatureApk -> loadSignatureApk(message.file)
-                    is Generate -> generatePatch(message.file)
+                    is Generate -> generatePatch(message.file, message.signatureVerificationTypes)
                     else -> throw UnsupportedOperationException("\"${message::class.java.simpleName}\" is currently not implemented.")
                 }
             }
@@ -76,7 +79,7 @@ class PatchGenerator(val signatureLoaderParameter: Any? = null) : Runnable {
         }
     }
 
-    private fun generatePatch(file: File) {
+    private fun generatePatch(file: File, signatureVerificationTypes: SignatureVerificationTypes) {
         FileOutputStream(file).use { fileOutputStream ->
             ZipOutputStream(fileOutputStream).use { topLevelZipOutputStream ->
                 topLevelZipOutputStream.putNextEntry(ZipEntry("patch.txt"))

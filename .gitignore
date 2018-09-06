@@ -3,6 +3,9 @@ Thumbs.db
 
 /core/src/main/java/com/github/kaeptmblaubaer1000/smalisignaturepatchgenerator/core/generated/
 
+# Generated pathes and distributions
+*.zip
+
 
 # ---> Android
 # Built application files

@@ -5,6 +5,7 @@ import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.ChangeSig
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.Generate
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.PatchGenerator
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.Stop
+import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated.SignatureVerificationTypes
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.mainlib.IMain
 import java.io.File
 
@@ -15,11 +16,17 @@ class Main {
             if (args.size != 3) {
                 printUsage()
             } else {
-                val patchGenerator = PatchGenerator()
+                lateinit var identifiedSignatureVerificationTypes: SignatureVerificationTypes
+                val waiter = java.lang.Object()
+                val patchGenerator = PatchGenerator(signatureVerificationTypesCallback = {
+                    identifiedSignatureVerificationTypes = it
+                    waiter.notifyAll()
+                })
                 patchGenerator.start()
                 patchGenerator.inputQueue.put(ChangeMainApk(File(args[0])))
                 patchGenerator.inputQueue.put(ChangeSignatureApk(File(args[1])))
-                patchGenerator.inputQueue.put(Generate(File(args[2])))
+                waiter.wait()
+                patchGenerator.inputQueue.put(Generate(File(args[2]), identifiedSignatureVerificationTypes))
                 patchGenerator.inputQueue.put(Stop)
                 patchGenerator.join()
                 println(patchGenerator.identifiedSignatureVerificationTypes)
