@@ -2,6 +2,7 @@ package com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core
 
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated.SignatureVerificationTypes
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.signature.SignatureLoader
+import com.google.common.io.ByteStreams
 import org.jf.dexlib2.dexbacked.DexBackedDexFile
 import org.jf.dexlib2.iface.DexFile
 import org.jf.dexlib2.rewriter.DexRewriter
@@ -38,7 +39,7 @@ class PatchGenerator(val signatureLoaderParameter: Any? = null) : Runnable {
         val zipEntry = zipFile.getEntry("classes.dex")
                 ?: throw InvalidApkFileException("The APK file is invalid because it has no classes.dex.")
         val inputStream = zipFile.getInputStream(zipEntry)
-        val ret = identifySignatureVerificationTypes(DexBackedDexFile.fromInputStream(null, inputStream))
+        val ret = identifySignatureVerificationTypes(DexBackedDexFile(null, ByteStreams.toByteArray(inputStream)))
         this.dexFile = ret.first
         this.identifiedSignatureVerificationTypes = ret.second
     }
