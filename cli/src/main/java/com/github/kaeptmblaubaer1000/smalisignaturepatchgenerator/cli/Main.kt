@@ -20,12 +20,16 @@ class Main {
                 val waiter = java.lang.Object()
                 val patchGenerator = PatchGenerator(signatureVerificationTypesCallback = {
                     identifiedSignatureVerificationTypes = it
-                    waiter.notifyAll()
+                    synchronized(waiter) {
+		        waiter.notifyAll()
+		    }
                 })
                 patchGenerator.start()
                 patchGenerator.inputQueue.put(ChangeMainApk(File(args[0])))
                 patchGenerator.inputQueue.put(ChangeSignatureApk(File(args[1])))
-                waiter.wait()
+                synchronized(waiter) {
+                    waiter.wait()
+		}
                 patchGenerator.inputQueue.put(Generate(File(args[2]), identifiedSignatureVerificationTypes))
                 patchGenerator.inputQueue.put(Stop)
                 patchGenerator.join()
