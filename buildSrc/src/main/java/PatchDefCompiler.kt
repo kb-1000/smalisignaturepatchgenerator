@@ -1,5 +1,6 @@
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.patchdefparser.Parser
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.patchdefparser.PatchDef
+import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
@@ -9,6 +10,7 @@ import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
+import org.jetbrains.annotations.Contract
 import java.io.File
 
 object PatchDefCompiler {
@@ -103,6 +105,24 @@ object PatchDefCompiler {
                                     }
                                 }
                                 .add("%<%<)\n%>%>")
+                                .build())
+                        .build())
+                .addFunction(FunSpec
+                        .builder("verifySelectedSignatureVerificationTypes")
+                        .addParameter("available", signatureVerificationTypesClassName)
+                        .addParameter("selected", signatureVerificationTypesClassName)
+                        .returns(Boolean::class)
+                        .addCode("return when {%>\n")
+                        .apply {
+                            for(signatureVerificationType in signatureVerificationTypes) {
+                                addCode("!available.%1N && selected.%1N -> false\n", signatureVerificationType)
+                            }
+                        }
+                        .addCode("else -> true\n")
+                        .addCode("%<}\n")
+                        .addAnnotation(AnnotationSpec
+                                .builder(Contract::class)
+                                .addMember("pure = true")
                                 .build())
                         .build())
                 .build()

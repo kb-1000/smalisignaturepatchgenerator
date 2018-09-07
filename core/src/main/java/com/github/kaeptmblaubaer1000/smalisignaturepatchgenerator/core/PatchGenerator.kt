@@ -1,6 +1,7 @@
 package com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core
 
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated.SignatureVerificationTypes
+import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated.verifySelectedSignatureVerificationTypes
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.signature.SignatureLoader
 import com.google.common.io.ByteStreams
 import org.jf.dexlib2.dexbacked.DexBackedDexFile
@@ -41,7 +42,7 @@ class PatchGenerator(val signatureLoaderParameter: Any? = null, val signatureVer
         val inputStream = zipFile.getInputStream(zipEntry)
         val ret = identifySignatureVerificationTypes(DexBackedDexFile(null, ByteStreams.toByteArray(inputStream)))
         this.dexFile = ret.first
-        if(identifiedSignatureVerificationTypes != ret.second) {
+        if (identifiedSignatureVerificationTypes != ret.second) {
             identifiedSignatureVerificationTypes = ret.second
             signatureVerificationTypesCallback(identifiedSignatureVerificationTypes)
         }
@@ -80,6 +81,10 @@ class PatchGenerator(val signatureLoaderParameter: Any? = null, val signatureVer
     }
 
     private fun generatePatch(file: File, signatureVerificationTypes: SignatureVerificationTypes) {
+        if (!verifySelectedSignatureVerificationTypes(identifiedSignatureVerificationTypes, signatureVerificationTypes)) {
+            throw IllegalArgumentException("$signatureVerificationTypes selected, but only $identifiedSignatureVerificationTypes available")
+        }
+
         FileOutputStream(file).use { fileOutputStream ->
             ZipOutputStream(fileOutputStream).use { topLevelZipOutputStream ->
                 topLevelZipOutputStream.putNextEntry(ZipEntry("patch.txt"))
