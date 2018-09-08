@@ -88,7 +88,19 @@ class PatchGenerator(val signatureLoaderParameter: Any? = null, val signatureVer
         FileOutputStream(file).use { fileOutputStream ->
             ZipOutputStream(fileOutputStream).use { topLevelZipOutputStream ->
                 topLevelZipOutputStream.putNextEntry(ZipEntry("patch.txt"))
-                topLevelZipOutputStream.bufferedWriter(Charsets.UTF_8)
+                topLevelZipOutputStream.bufferedWriter(Charsets.UTF_8).use {bufferedPatch ->
+                    //TODO: set PACKAGE (maybe add another thing to SignatureLoader or another class)
+                    bufferedPatch.write("""
+[MIN_ENGINE_VER]
+1
+
+[AUTHOR]
+SmaliSignaturePatchGenerator (https://github.com/kaeptmblaubaer1000/SmaliSignaturePatchGenerator)
+
+[PACKAGE]
+*
+""")
+                }
             }
         }
     }
