@@ -1,6 +1,7 @@
 plugins {
     application
     id("org.jetbrains.kotlin.jvm")
+    id("com.github.johnrengelman.shadow") version "2.0.4"
 }
 
 tasks.withType(CreateStartScripts::class.java).getByName("startScripts") {
@@ -8,7 +9,7 @@ tasks.withType(CreateStartScripts::class.java).getByName("startScripts") {
 }
 
 val transformClassesWithProguard = task("transformClassesWithProguard", proguard.gradle.ProGuardTask::class) {
-    injars(project.tasks.getAt(JavaPlugin.JAR_TASK_NAME).outputs.files.plus(project.configurations.getByName(JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME)))
+    injars(tasks["shadowJar"])
     libraryjars("${System.getProperty("java.home")}/lib/rt.jar")
     libraryjars("${System.getProperty("java.home")}/lib/jce.jar")
     libraryjars("${System.getProperty("java.home")}/jmods/java.base.jmod")
