@@ -3,8 +3,7 @@ package com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated.SignatureVerificationTypes
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated.verifySelectedSignatureVerificationTypes
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.metadata.MetadataLoader
-import com.google.common.io.ByteStreams
-import org.jf.dexlib2.dexbacked.DexBackedDexFile
+import org.jf.dexlib2.DexFileFactory
 import org.jf.dexlib2.iface.DexFile
 import org.jf.dexlib2.rewriter.DexRewriter
 import java.io.File
@@ -12,7 +11,6 @@ import java.io.FileOutputStream
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.zip.ZipEntry
-import java.util.zip.ZipFile
 import java.util.zip.ZipOutputStream
 
 class PatchGenerator(val signatureLoaderParameter: Any? = null, val signatureVerificationTypesCallback: (SignatureVerificationTypes) -> Unit = {}) : Runnable {
@@ -37,11 +35,7 @@ class PatchGenerator(val signatureLoaderParameter: Any? = null, val signatureVer
 
     @Throws(InvalidApkFileException::class)
     private fun loadMainApkFile(file: File) {
-        val zipFile = java.util.zip.ZipFile(file, ZipFile.OPEN_READ) //TODO: catch errors
-        val zipEntry = zipFile.getEntry("classes.dex")
-                ?: throw InvalidApkFileException("The APK file is invalid because it has no classes.dex.")
-        val inputStream = zipFile.getInputStream(zipEntry)
-        val ret = identifySignatureVerificationTypes(DexBackedDexFile(null, ByteStreams.toByteArray(inputStream)))
+        val ret = identifySignatureVerificationTypes(DexFileFactory.loadDexFile(File(file, "classes.dex"), null))
         this.dexFile = ret.first
         if (identifiedSignatureVerificationTypes != ret.second) {
             identifiedSignatureVerificationTypes = ret.second
