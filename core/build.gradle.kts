@@ -63,3 +63,12 @@ val compilePatchDef = tasks.create("compilePatchDef") {
 tasks.getByName<KotlinCompile>("compileKotlin") {
     dependsOn(compilePatchDef)
 }
+
+tasks.withType(KotlinCompile::class.java) {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+java.setSourceCompatibility("1.8")
+java.setTargetCompatibility("1.8")

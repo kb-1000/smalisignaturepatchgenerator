@@ -16,8 +16,8 @@ dependencies {
     }
 }
 
-tasks.asMap.map {
-    (it.value as? KotlinCompile ?: return@map).kotlinOptions {
+tasks.withType(KotlinCompile::class.java) {
+    kotlinOptions {
         jvmTarget = "1.8"
     }
 }

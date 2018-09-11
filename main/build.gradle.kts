@@ -64,3 +64,6 @@ tasks.withType(KotlinCompile::class.java) {
         jvmTarget = "1.8"
     }
 }
+
+java.setSourceCompatibility("1.8")
+java.setTargetCompatibility("1.8")
