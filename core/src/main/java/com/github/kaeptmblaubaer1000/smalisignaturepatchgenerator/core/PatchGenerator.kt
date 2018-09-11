@@ -3,6 +3,7 @@ package com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated.SignatureVerificationTypes
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated.verifySelectedSignatureVerificationTypes
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.metadata.MetadataLoader
+import org.jetbrains.annotations.Contract
 import org.jf.dexlib2.DexFileFactory
 import org.jf.dexlib2.iface.DexFile
 import org.jf.dexlib2.rewriter.DexRewriter
@@ -20,25 +21,19 @@ class PatchGenerator(val signatureLoaderParameter: Any? = null, val signatureVer
     val outputQueue: BlockingQueue<OutputMessage> = LinkedBlockingQueue()
     val packageName: String? = null
 
-    private fun identifySignatureVerificationTypes(dexFile: DexFile): Pair<DexFile, SignatureVerificationTypes> {
-        val signatureVerificationTypes = SignatureVerificationTypes()
-        val rebuiltDexFile = rebuildDexFile(DexRewriter(IdentificationRewriterModule(signatureVerificationTypes)).rewriteDexFile(dexFile))
-        return Pair(rebuiltDexFile, signatureVerificationTypes)
-
-    }
-
     private var dexFile: DexFile? = null
 
     var identifiedSignatureVerificationTypes: SignatureVerificationTypes = SignatureVerificationTypes()
+        @Contract(" -> new")
         get() = field.copy()
         private set
 
     @Throws(InvalidApkFileException::class)
     private fun loadMainApkFile(file: File) {
-        val ret = identifySignatureVerificationTypes(DexFileFactory.loadDexFile(File(file, "classes.dex"), null))
-        this.dexFile = ret.first
-        if (identifiedSignatureVerificationTypes != ret.second) {
-            identifiedSignatureVerificationTypes = ret.second
+        val signatureVerificationTypes = SignatureVerificationTypes()
+        this.dexFile = rebuildDexFile(DexRewriter(IdentificationRewriterModule(signatureVerificationTypes)).rewriteDexFile(DexFileFactory.loadDexFile(File(file, "classes.dex"), null)))
+        if (identifiedSignatureVerificationTypes != signatureVerificationTypes) {
+            identifiedSignatureVerificationTypes = signatureVerificationTypes
             signatureVerificationTypesCallback(identifiedSignatureVerificationTypes)
         }
     }
