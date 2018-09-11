@@ -9,18 +9,19 @@ plugins {
     id("org.jetbrains.kotlin.jvm")
 }
 
-val smali_version: String by rootProject.extra
+val smaliVersion: String by rootProject.extra
+
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
 
-    implementation("org.smali:baksmali:${smali_version}") {
+    implementation("org.smali:baksmali:$smaliVersion") {
         exclude(group = "com.google.guava")
     }
 
     // The following one block contains updates to dependencies of other dependencies.
-    //noinspection GradleVersion
+    //noinspection GradleDependency
     implementation("com.beust:jcommander:1.71")
     implementation("com.google.guava:guava:26.0-jre")
 
