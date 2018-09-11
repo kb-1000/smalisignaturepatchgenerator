@@ -1,4 +1,4 @@
-package com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.signature
+package com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.metadata
 
 import com.android.apksig.ApkVerifier
 import java.io.File

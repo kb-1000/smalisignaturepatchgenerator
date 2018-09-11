@@ -2,7 +2,7 @@ package com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core
 
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated.SignatureVerificationTypes
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated.verifySelectedSignatureVerificationTypes
-import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.signature.MetadataLoader
+import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.metadata.MetadataLoader
 import com.google.common.io.ByteStreams
 import org.jf.dexlib2.dexbacked.DexBackedDexFile
 import org.jf.dexlib2.iface.DexFile

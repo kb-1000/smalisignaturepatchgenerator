@@ -1,4 +1,4 @@
-package com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.signature
+package com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.metadata
 
 import android.content.Context
 import android.content.pm.PackageManager
