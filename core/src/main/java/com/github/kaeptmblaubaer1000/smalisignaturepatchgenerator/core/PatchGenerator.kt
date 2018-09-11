@@ -2,7 +2,7 @@ package com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core
 
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated.SignatureVerificationTypes
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated.verifySelectedSignatureVerificationTypes
-import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.signature.SignatureLoader
+import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.signature.MetadataLoader
 import com.google.common.io.ByteStreams
 import org.jf.dexlib2.dexbacked.DexBackedDexFile
 import org.jf.dexlib2.iface.DexFile
@@ -20,6 +20,7 @@ class PatchGenerator(val signatureLoaderParameter: Any? = null, val signatureVer
 
     val inputQueue: BlockingQueue<InputMessage> = LinkedBlockingQueue()
     val outputQueue: BlockingQueue<OutputMessage> = LinkedBlockingQueue()
+    val packageName: String? = null
 
     private fun identifySignatureVerificationTypes(dexFile: DexFile): Pair<DexFile, SignatureVerificationTypes> {
         val signatureVerificationTypes = SignatureVerificationTypes()
@@ -51,7 +52,7 @@ class PatchGenerator(val signatureLoaderParameter: Any? = null, val signatureVer
     private var signatures: List<ByteArray>? = null
 
     private fun loadSignatureApk(file: File) {
-        signatures = SignatureLoader.loadSignature(file, signatureLoaderParameter)
+        signatures = MetadataLoader.loadSignature(file, signatureLoaderParameter)
     }
 
 
@@ -88,8 +89,7 @@ class PatchGenerator(val signatureLoaderParameter: Any? = null, val signatureVer
         FileOutputStream(file).use { fileOutputStream ->
             ZipOutputStream(fileOutputStream).use { topLevelZipOutputStream ->
                 topLevelZipOutputStream.putNextEntry(ZipEntry("patch.txt"))
-                topLevelZipOutputStream.bufferedWriter(Charsets.UTF_8).use {bufferedPatch ->
-                    //TODO: set PACKAGE (maybe add another thing to SignatureLoader or another class)
+                topLevelZipOutputStream.bufferedWriter(Charsets.UTF_8).use { bufferedPatch ->
                     bufferedPatch.write("""
 [MIN_ENGINE_VER]
 1
@@ -98,7 +98,7 @@ class PatchGenerator(val signatureLoaderParameter: Any? = null, val signatureVer
 SmaliSignaturePatchGenerator (https://github.com/kaeptmblaubaer1000/SmaliSignaturePatchGenerator)
 
 [PACKAGE]
-*
+${packageName!!}
 """)
                 }
             }

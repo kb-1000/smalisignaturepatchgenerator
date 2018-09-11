@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     application
     id("org.jetbrains.kotlin.jvm")
@@ -55,4 +57,10 @@ dependencies {
 
 
     implementation(project(":cli"))
+}
+
+tasks.withType(KotlinCompile::class.java) {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
