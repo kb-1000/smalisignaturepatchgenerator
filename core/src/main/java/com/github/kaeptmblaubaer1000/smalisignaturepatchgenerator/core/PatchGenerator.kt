@@ -65,8 +65,9 @@ class PatchGenerator(val signatureLoaderParameter: Any? = null, val signatureVer
                     else -> throw UnsupportedOperationException("\"${message::class.java.simpleName}\" is currently not implemented.")
                 }
             }
+            outputQueue.put(Stopped)
         } catch (e: Throwable) {
-            throw e
+            outputQueue.put(Error(e))
         }
     }
 
