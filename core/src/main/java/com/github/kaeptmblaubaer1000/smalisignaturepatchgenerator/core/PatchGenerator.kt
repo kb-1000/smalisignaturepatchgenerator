@@ -31,7 +31,7 @@ class PatchGenerator(val signatureLoaderParameter: Any? = null, val signatureVer
     @Throws(InvalidApkFileException::class)
     private fun loadMainApkFile(file: File) {
         val signatureVerificationTypes = SignatureVerificationTypes()
-        this.dexFile = rebuildDexFile(DexRewriter(IdentificationRewriterModule(signatureVerificationTypes)).rewriteDexFile(DexFileFactory.loadDexFile(File(file, "classes.dex"), null)))
+        this.dexFile = rebuildDexFile(DexRewriter(IdentificationRewriterModule(signatureVerificationTypes)).rewriteDexFile(DexFileFactory.loadDexFile(file, null)))
         if (identifiedSignatureVerificationTypes != signatureVerificationTypes) {
             identifiedSignatureVerificationTypes = signatureVerificationTypes
             signatureVerificationTypesCallback(identifiedSignatureVerificationTypes)
