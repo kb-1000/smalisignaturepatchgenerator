@@ -25,8 +25,7 @@ val transformClassesWithProguard = task("transformClassesWithProguard", proguard
     public static void main(java.lang.String[]);
 } """)
     dontobfuscate()
-    keepattributes("org.jetbrains.annotations.Nullable")
-    keepattributes("org.jetbrains.annotations.NotNull")
+    target("1.8")
 }
 
 application {
