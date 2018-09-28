@@ -22,3 +22,11 @@ before_script:
   - export VERSION=$(date --date="$DATE" +'%Y%m%d%H%M%S')
 script:
   - ./gradlew clean build
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
