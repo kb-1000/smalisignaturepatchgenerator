@@ -19,8 +19,8 @@ class PatchGenerator(val signatureLoaderParameter: Any? = null, val signatureVer
 
     val inputQueue: BlockingQueue<InputMessage> = LinkedBlockingQueue()
     val outputQueue: BlockingQueue<OutputMessage> = LinkedBlockingQueue()
-    val packageName: String? = null
 
+    private var packageName: String? = null
     private var dexFile: DexFile? = null
 
     var identifiedSignatureVerificationTypes: SignatureVerificationTypes = SignatureVerificationTypes()
@@ -36,6 +36,7 @@ class PatchGenerator(val signatureLoaderParameter: Any? = null, val signatureVer
             identifiedSignatureVerificationTypes = signatureVerificationTypes
             signatureVerificationTypesCallback(identifiedSignatureVerificationTypes)
         }
+        packageName = MetadataLoader.getPackageName(file, signatureLoaderParameter)
     }
 
     private var signatures: List<ByteArray>? = null
