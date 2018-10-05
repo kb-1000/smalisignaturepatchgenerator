@@ -8,7 +8,7 @@ plugins {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation("com.android.tools.build:apksig:3.1.4")
+    implementation("com.android.tools.build:apksig:3.2.0")
 }
 
 tasks.withType(KotlinCompile::class.java) {
