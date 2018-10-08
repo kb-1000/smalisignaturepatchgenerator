@@ -23,6 +23,7 @@ object MetadataLoader {
             val manifest = fileSystem.rootDirectories.first().resolve("AndroidManifest.xml")
             val buffer = ByteBuffer.allocate(Files.size(manifest).toInt())
             Files.newByteChannel(manifest, StandardOpenOption.READ).read(buffer)
+            buffer.flip()
             val parser = AndroidBinXmlParser(buffer)
             var eventType = parser.eventType
             while (eventType != AndroidBinXmlParser.EVENT_END_DOCUMENT) {
