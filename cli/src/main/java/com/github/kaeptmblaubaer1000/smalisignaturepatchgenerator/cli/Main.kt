@@ -68,7 +68,7 @@ class Main {
             get() = "The basic command line interface"
 
         private fun printUsage() {
-            println("Usage: <apk-file> <patch-zip-file>")
+            println("Usage: SmaliSignaturePatchGenerator cli <code apk file> <signature apk file> <output zip patch>")
         }
 
         private fun processErrors(patchGenerator: PatchGenerator) {
