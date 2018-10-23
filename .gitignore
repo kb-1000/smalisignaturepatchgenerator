@@ -3,6 +3,9 @@ Thumbs.db
 
 /core/src/main/java/com/github/kaeptmblaubaer1000/smalisignaturepatchgenerator/core/generated/
 
+# Vim
+*.sw[op]
+
 # Generated pathes and distributions
 *.zip
 
