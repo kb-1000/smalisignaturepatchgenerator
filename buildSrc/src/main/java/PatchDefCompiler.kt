@@ -1,5 +1,6 @@
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.patchdefparser.Parser
 import com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.patchdefparser.PatchDef
+import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
@@ -10,6 +11,7 @@ import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.WildcardTypeName
 import org.jetbrains.annotations.Contract
 import java.io.File
 
@@ -34,6 +36,7 @@ object PatchDefCompiler {
                 .build()
 
         val methodClassName = ClassName("org.jf.dexlib2.iface", "Method")
+        val instructionClassName = ClassName("org.jf.dexlib2.iface.instruction", "Instruction")
 
         val identificationMethodRewriterClass = TypeSpec.classBuilder(ClassName("com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated", "IdentificationMethodRewriter"))
                 .superclass(ClassName("org.jf.dexlib2.rewriter", "MethodRewriter"))
@@ -87,10 +90,48 @@ object PatchDefCompiler {
                         .build())
                 .build()
 
+        val coreInstructionRewriterClass = TypeSpec.classBuilder("CoreInstructionRewriter")
+                .superclass(ClassName("org.jf.dexlib2.rewriter", "InstructionRewriter"))
+                .primaryConstructor(FunSpec.constructorBuilder()
+                        .addParameter("rewriters", ClassName("org.jf.dexlib2.rewriter", "Rewriters"))
+                        .addParameter("signatureVerificationTypes", signatureVerificationTypesClassName)
+                        .build())
+                .addSuperclassConstructorParameter("rewriters")
+                .addProperty(PropertySpec
+                        .builder("signatureVerificationTypes", signatureVerificationTypesClassName)
+                        .initializer("signatureVerificationTypes")
+                        .build())
+                .addFunction(FunSpec
+                        .builder("rewrite")
+                        .addParameter("instruction", instructionClassName)
+                        .returns(instructionClassName)
+                        .addModifiers(KModifier.OVERRIDE)
+                        .addCode("if (instruction !is %T || instruction !is %T) return super.rewrite(instruction)\n", ClassName("org.jf.dexlib2.iface.instruction", "ReferenceInstruction"), ParameterizedTypeName.get(ClassName("com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core", "Wrapped"), WildcardTypeName.subtypeOf(ANY)))
+                        .addCode("when (instruction.methodName) {%>\n")
+                        .apply {
+                            for (patchDef in patchDefs.values) {
+                                addCode("%1S -> {%>\n", "${patchDef.modifiedClass}->${patchDef.modifiedMethod}")
+
+                                addCode("when (((instruction as %T).reference as %T)) {%>\n", ClassName("org.jf.dexlib2.iface.instruction", "ReferenceInstruction"), ClassName("org.jf.dexlib2.iface.reference", "MethodReference"))
+
+                                addCode("%<}\n")
+                                reversedPatchDefs[patchDef]!!
+
+                                addCode("%<}\n")
+                            }
+
+                        }
+                        .addCode("else -> return super.rewrite(instruction)\n")
+                        .addCode("%<}\n")
+                        .addStatement("return super.rewrite(instruction)")
+                        .build())
+                .build()
+
 
         val fileSpec = FileSpec.builder("com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core.generated", "CompiledPatchDef")
                 .addType(identificationMethodRewriterClass)
                 .addType(signatureVerificationTypesClass)
+                .addType(coreInstructionRewriterClass)
                 .addProperty(PropertySpec
                         .builder("signatureVerificationTypesHumanNames", ParameterizedTypeName.get(Map::class, String::class, String::class))
                         .initializer(CodeBlock.builder()
@@ -114,7 +155,7 @@ object PatchDefCompiler {
                         .returns(Boolean::class)
                         .addCode("return when {%>\n")
                         .apply {
-                            for(signatureVerificationType in signatureVerificationTypes) {
+                            for (signatureVerificationType in signatureVerificationTypes) {
                                 addCode("!available.%1N && selected.%1N -> false\n", signatureVerificationType)
                             }
                         }
