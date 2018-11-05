@@ -4,5 +4,6 @@ package com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.patchdefparse
 data class PatchDef(
         val humanName: String,
         val modifiedClass: String,
-        val modifiedMethod: String
+        val modifiedMethod: String,
+        val replacedCall: String
 )

@@ -6,13 +6,15 @@ import kotlin.String
 data class NullablePatchDef(
         var humanName: String? = null,
         var modifiedClass: String? = null,
-        var modifiedMethod: String? = null
+        var modifiedMethod: String? = null,
+        var replacedCall: String? = null
 ) {
     fun toNonNullable(): PatchDef? {
         return PatchDef(
                 humanName = humanName ?: return null,
                 modifiedClass = modifiedClass ?: return null,
-                modifiedMethod = modifiedMethod ?: return null
+                modifiedMethod = modifiedMethod ?: return null,
+                replacedCall = replacedCall ?: return null
         )
     }
 }
@@ -28,5 +30,9 @@ class PatchDefListenerImpl(private val patchDef: NullablePatchDef) : PatchDefBas
 
     override fun exitModifiedMethodAssignment(ctx: PatchDefParser.ModifiedMethodAssignmentContext) {
         patchDef.modifiedMethod = unquoteUnescapeJavaString(ctx.StringLiteral().text)
+    }
+
+    override fun exitReplacedCallAssignment(ctx: PatchDefParser.ReplacedCallAssignmentContext) {
+        patchDef.replacedCall = unquoteUnescapeJavaString(ctx.StringLiteral().text)
     }
 }
