@@ -2,4 +2,5 @@ patch("msonlineid") {
     humanName = "Microsoft Online ID (Used by Xbox Live)"
     modifiedClass = "Lcom/microsoft/onlineid/internal/PackageInfoHelper;"
     modifiedMethod = "getCurrentAppSignatures(Landroid/content/Context;)[Landroid/content/pm/Signature;"
+    replacedCall = "Lcom/microsoft/onlineid/internal/PackageInfoHelper;->getAppSignatures(Landroid/content/Context;Ljava/lang/String;)[Landroid/content/pm/Signature;"
 }
