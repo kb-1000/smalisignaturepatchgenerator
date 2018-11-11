@@ -33,17 +33,20 @@ application {
     applicationName = "smali-signature-patch-generator"
 }
 
+
 distributions {
     getByName("main") {
         contents {
             exclude {
-                it.name.endsWith(".jar") && it.name != "SmaliSignaturePatchGenerator.jar"
+                it.name.endsWith(".jar") && it.name != "main-all.jar"
             }
 
 
             into("lib") {
-                from(transformClassesWithProguard) {
-                    include("SmaliSignaturePatchGenerator.jar")
+                from(tasks["shadowJar"]) {
+                    rename {
+                        if(it == "main-all.jar") "SmaliSignaturePatchGenerator.jar" else it
+                    }
                 }
             }
         }
