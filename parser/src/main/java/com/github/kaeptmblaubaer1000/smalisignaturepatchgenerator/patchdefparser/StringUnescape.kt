@@ -30,7 +30,7 @@ fun unescapeJavaString(st: String): String {
             else
                 st[i + 1]
             // Octal escape?
-            if (nextChar >= '0' && nextChar <= '7') {
+            if (nextChar in '0'..'7') {
                 var code = "" + nextChar
                 i++
                 if (i < st.length - 1 && st[i + 1] >= '0'
@@ -77,6 +77,6 @@ fun unescapeJavaString(st: String): String {
     return sb.toString()
 }
 
-fun unquoteUnescapeJavaString(st: String) : String {
-    return unescapeJavaString(st.slice(1..st.length-2))
+fun unquoteUnescapeJavaString(st: String): String {
+    return unescapeJavaString(st.slice(1..st.length - 2))
 }

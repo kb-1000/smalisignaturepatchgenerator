@@ -1,18 +1,15 @@
 package com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core
 
-import java.math.BigInteger
-import java.security.MessageDigest
 import org.jf.dexlib2.AccessFlags
 import org.jf.dexlib2.Opcode
 import org.jf.dexlib2.ReferenceType
-import org.jf.dexlib2.analysis.RegisterType
-import org.jf.dexlib2.iface.Annotation
-import org.jf.dexlib2.iface.ClassDef
-import org.jf.dexlib2.iface.Field
-import org.jf.dexlib2.iface.Method
 import org.jf.dexlib2.base.reference.BaseMethodReference
 import org.jf.dexlib2.base.reference.BaseTypeReference
+import org.jf.dexlib2.iface.Annotation
+import org.jf.dexlib2.iface.ClassDef
 import org.jf.dexlib2.iface.ExceptionHandler
+import org.jf.dexlib2.iface.Field
+import org.jf.dexlib2.iface.Method
 import org.jf.dexlib2.iface.MethodImplementation
 import org.jf.dexlib2.iface.MethodParameter
 import org.jf.dexlib2.iface.TryBlock
@@ -21,6 +18,8 @@ import org.jf.dexlib2.iface.instruction.Instruction
 import org.jf.dexlib2.iface.instruction.formats.Instruction10x
 import org.jf.dexlib2.iface.instruction.formats.Instruction35c
 import org.jf.dexlib2.iface.reference.Reference
+import java.math.BigInteger
+import java.security.MessageDigest
 
 private val emptyList: List<Nothing> = emptyList()
 private val emptySet: Set<Nothing> = emptySet()
@@ -34,7 +33,7 @@ fun generateSignatureClass(signatureData: String): ClassDef {
             "Signature${BigInteger(digest).toString(16).padStart(digest.size * 2, '0')}"
         }
 
-        abstract inner class BaseMethod: BaseMethodReference(), Method {
+        abstract inner class BaseMethod : BaseMethodReference(), Method {
             override fun getReturnType() = "V"
             override fun getDefiningClass() = type
             override fun getParameterTypes(): List<CharSequence> = emptyList
@@ -81,16 +80,18 @@ fun generateSignatureClass(signatureData: String): ClassDef {
                         override fun getDefiningClass() = "Ljava/lang/Object;"
 
                     }
+
                     override fun getReference(): Reference = reference
                 }, object : BaseInstruction(), Instruction10x {
                     override fun getOpcode() = Opcode.RETURN_VOID
                 })
             }
+
             override fun getImplementation(): MethodImplementation? = implementation
         })
 
         override fun getDirectMethods() = directMethods
-	
+
         override fun getMethods() = directMethods
 
         override fun getSuperclass(): String? = null

@@ -6,27 +6,27 @@ group: edge
 
 android:
   components:
-    - tools
-    - platform-tools
-    - build-tools-28.0.3
-    - android-28
-    - extra-android-support
-    - extra-android-m2repository
+  - tools
+  - platform-tools
+  - build-tools-28.0.3
+  - android-28
+  - extra-android-support
+  - extra-android-m2repository
 jdk:
-  - oraclejdk8
+- oraclejdk8
 env:
   global:
-    - TERM=dumb
+  - TERM=dumb
 before_script:
-  - export DATE=$(date)
-  - export VERSION=$(date --date="$DATE" +'%Y%m%d%H%M%S')
+- export DATE=$(date)
+- export VERSION=$(date --date="$DATE" +'%Y%m%d%H%M%S')
 script:
-  - ./gradlew clean build
+- ./gradlew clean build
 
 before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/

@@ -37,7 +37,6 @@ java.setSourceCompatibility("1.8")
 java.setTargetCompatibility("1.8")
 
 
-
 val SourceSet.kotlin: SourceDirectorySet
     get() =
         (this as HasConvention)

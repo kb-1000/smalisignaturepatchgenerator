@@ -1,10 +1,12 @@
 package com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core
 
-import org.jf.dexlib2.iface.instruction.*
-import org.jf.dexlib2.iface.instruction.formats.*
+import org.jf.dexlib2.ReferenceType
 import org.jf.dexlib2.iface.Method
 import org.jf.dexlib2.iface.MethodImplementation
-import org.jf.dexlib2.ReferenceType
+import org.jf.dexlib2.iface.instruction.Instruction
+import org.jf.dexlib2.iface.instruction.ReferenceInstruction
+import org.jf.dexlib2.iface.instruction.formats.Instruction35c
+import org.jf.dexlib2.iface.instruction.formats.Instruction3rc
 
 abstract class Wrapped<T>(val methodName: String) {
     abstract fun unwrap(): T
@@ -22,15 +24,15 @@ class WrappedMethodImplementation(private val methodImplementation: MethodImplem
     override fun unwrap() = methodImplementation
 
     override fun getInstructions(): Iterable<Instruction> = methodImplementation.instructions.map {
-        when(it) {
-            is ReferenceInstruction -> when(it.referenceType) {
-	        ReferenceType.METHOD -> when(it) {
-		    is Instruction35c -> WrappedInstruction35c(it, methodName)
-		    is Instruction3rc -> WrappedInstruction3rc(it, methodName)
-		    else -> it
-		}
-		else -> it
-	    }
+        when (it) {
+            is ReferenceInstruction -> when (it.referenceType) {
+                ReferenceType.METHOD -> when (it) {
+                    is Instruction35c -> WrappedInstruction35c(it, methodName)
+                    is Instruction3rc -> WrappedInstruction3rc(it, methodName)
+                    else -> it
+                }
+                else -> it
+            }
             else -> it
         }
     }

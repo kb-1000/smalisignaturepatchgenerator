@@ -41,11 +41,10 @@ distributions {
                 it.name.endsWith(".jar") && it.name != "main-all.jar"
             }
 
-
             into("lib") {
                 from(tasks["shadowJar"]) {
                     rename {
-                        if(it == "main-all.jar") "SmaliSignaturePatchGenerator.jar" else it
+                        if (it == "main-all.jar") "SmaliSignaturePatchGenerator.jar" else it
                     }
                 }
             }
