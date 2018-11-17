@@ -14,6 +14,7 @@ import org.jf.dexlib2.iface.MethodImplementation
 import org.jf.dexlib2.iface.MethodParameter
 import org.jf.dexlib2.iface.TryBlock
 import org.jf.dexlib2.iface.debug.DebugItem
+import org.jf.dexlib2.iface.instruction.FiveRegisterInstruction
 import org.jf.dexlib2.iface.instruction.Instruction
 import org.jf.dexlib2.iface.instruction.formats.Instruction10x
 import org.jf.dexlib2.iface.instruction.formats.Instruction35c
@@ -50,6 +51,20 @@ fun generateSignatureClass(signatureData: String): ClassDef {
             override fun getCodeUnits() = opcode.format.size / 2
         }
 
+        abstract inner class BaseFiveRegisterInstruction : BaseInstruction(), FiveRegisterInstruction {
+            override fun getRegisterCount() = 0
+            override fun getRegisterC() = 0
+            override fun getRegisterD() = 0
+            override fun getRegisterE() = 0
+            override fun getRegisterF() = 0
+            override fun getRegisterG() = 0
+        }
+
+        abstract inner class BaseInvokeDirectInstruction : BaseFiveRegisterInstruction(), Instruction35c {
+            override fun getReferenceType() = ReferenceType.METHOD
+            override fun getOpcode() = Opcode.INVOKE_DIRECT
+        }
+
         override fun getType() = type
 
         override fun getAnnotations(): Set<Annotation> = emptySet
@@ -63,15 +78,9 @@ fun generateSignatureClass(signatureData: String): ClassDef {
             private val implementation: MethodImplementation = object : BaseMethodImplementation() {
                 override fun getRegisterCount() = 1
 
-                override fun getInstructions(): Iterable<Instruction> = listOf(object : BaseInstruction(), Instruction35c {
-                    override fun getReferenceType() = ReferenceType.METHOD
+                override fun getInstructions(): Iterable<Instruction> = listOf(object : BaseInvokeDirectInstruction(){
                     override fun getRegisterCount() = 1
-                    override fun getRegisterF() = 0
-                    override fun getRegisterG() = 0
-                    override fun getOpcode() = Opcode.INVOKE_DIRECT
                     override fun getRegisterC() = 0
-                    override fun getRegisterD() = 0
-                    override fun getRegisterE() = 0
 
                     private val reference = object : BaseMethodReference() {
                         override fun getName() = "<init>"
