@@ -65,6 +65,10 @@ fun generateSignatureClass(signatureData: String): ClassDef {
             override fun getOpcode() = Opcode.INVOKE_DIRECT
         }
 
+        private val returnVoidInstruction = object : BaseInstruction(), Instruction10x {
+            override fun getOpcode() = Opcode.RETURN_VOID
+        }
+
         override fun getType() = type
 
         override fun getAnnotations(): Set<Annotation> = emptySet
@@ -78,7 +82,7 @@ fun generateSignatureClass(signatureData: String): ClassDef {
             private val implementation: MethodImplementation = object : BaseMethodImplementation() {
                 override fun getRegisterCount() = 1
 
-                override fun getInstructions(): Iterable<Instruction> = listOf(object : BaseInvokeDirectInstruction(){
+                private val instructions: Iterable<Instruction> = listOf(object : BaseInvokeDirectInstruction(){
                     override fun getRegisterCount() = 1
                     override fun getRegisterC() = 0
 
@@ -91,12 +95,19 @@ fun generateSignatureClass(signatureData: String): ClassDef {
                     }
 
                     override fun getReference(): Reference = reference
-                }, object : BaseInstruction(), Instruction10x {
-                    override fun getOpcode() = Opcode.RETURN_VOID
-                })
+                }, returnVoidInstruction)
+                override fun getInstructions() = instructions
             }
 
             override fun getImplementation(): MethodImplementation? = implementation
+        }, object : BaseMethod() {
+            override fun getName() = "<clinit>"
+            override fun getAccessFlags() = AccessFlags.STATIC.ordinal
+
+            private val implementation: MethodImplementation = object : BaseMethodImplementation() {
+                override fun getRegisterCount() = 2
+                private val instructions: Iterable<Instruction> = listOf()
+            }
         })
 
         override fun getDirectMethods() = directMethods
