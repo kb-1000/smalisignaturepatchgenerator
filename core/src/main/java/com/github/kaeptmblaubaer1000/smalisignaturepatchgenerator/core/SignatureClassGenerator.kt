@@ -107,7 +107,11 @@ fun generateSignatureClass(signatureData: String): ClassDef {
             private val implementation: MethodImplementation = object : BaseMethodImplementation() {
                 override fun getRegisterCount() = 2
                 private val instructions: Iterable<Instruction> = listOf()
+
+                override fun getInstructions() = instructions
             }
+
+            override fun getImplementation() = implementation
         })
 
         override fun getDirectMethods() = directMethods
