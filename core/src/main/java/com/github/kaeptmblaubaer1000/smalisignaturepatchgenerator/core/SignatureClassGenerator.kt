@@ -25,11 +25,11 @@ import java.security.MessageDigest
 private val emptyList: List<Nothing> = emptyList()
 private val emptySet: Set<Nothing> = emptySet()
 
-fun generateSignatureClass(signatureData: String): ClassDef {
+fun generateSignatureClass(signatureData: List<String>): ClassDef {
     return object : BaseTypeReference(), ClassDef {
         private val type: String = run {
             val md = MessageDigest.getInstance("SHA-512")
-            md.update(signatureData.toByteArray(Charsets.US_ASCII))
+            md.update(signatureData.joinTo(StringBuilder(), "\n").toString().toByteArray(Charsets.US_ASCII))
             val digest = md.digest()
             "Signature${BigInteger(digest).toString(16).padStart(digest.size * 2, '0')}"
         }
@@ -105,7 +105,7 @@ fun generateSignatureClass(signatureData: String): ClassDef {
             override fun getAccessFlags() = AccessFlags.STATIC.ordinal
 
             private val implementation: MethodImplementation = object : BaseMethodImplementation() {
-                override fun getRegisterCount() = 2
+                override fun getRegisterCount() = 3
                 private val instructions: Iterable<Instruction> = listOf()
 
                 override fun getInstructions() = instructions
