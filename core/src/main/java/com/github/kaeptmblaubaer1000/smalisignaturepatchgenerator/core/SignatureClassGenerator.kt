@@ -3,8 +3,8 @@ package com.github.kaeptmblaubaer1000.smalisignaturepatchgenerator.core
 import org.jf.dexlib2.AccessFlags
 import org.jf.dexlib2.Opcode
 import org.jf.dexlib2.ReferenceType
-import org.jf.dexlib2.base.reference.BaseMethodReference
 import org.jf.dexlib2.base.reference.BaseFieldReference
+import org.jf.dexlib2.base.reference.BaseMethodReference
 import org.jf.dexlib2.base.reference.BaseTypeReference
 import org.jf.dexlib2.iface.Annotation
 import org.jf.dexlib2.iface.ClassDef
@@ -141,18 +141,19 @@ fun generateSignatureClass(signatureData: List<String>): ClassDef {
                     override fun getReferenceType() = ReferenceType.TYPE
                     private val reference: Reference = signatureArrayTypeReference
                     override fun getReference() = reference
-                }, *signatureData.fold<String, ArrayList<Instruction>>(ArrayList<Instruction>(signatureData.size * 4), { arrayList: ArrayList<Instruction>, s: String ->
+                }, *signatureData.fold(ArrayList(signatureData.size * 4)) { arrayList: ArrayList<Instruction>, s: String ->
                     arrayList.add(object : BaseInstruction(), Instruction21c {
                         override fun getOpcode() = Opcode.NEW_INSTANCE
                         private val reference: Reference = object : BaseTypeReference() {
                             override fun getType() = "Landroid/content/pm/Signature;"
                         }
+
                         override fun getReference() = reference
                         override fun getReferenceType() = ReferenceType.TYPE
                         override fun getRegisterA() = 1
                     })
                     arrayList
-                }).toTypedArray(), object : BaseInstruction(), Instruction21c {
+                }.toTypedArray(), object : BaseInstruction(), Instruction21c {
                     override fun getOpcode() = Opcode.SPUT_OBJECT
                     private val reference: Reference = getListStaticFields({})[0]
                     override fun getReference() = reference
