@@ -21,10 +21,17 @@ import org.jf.dexlib2.iface.instruction.formats.Instruction10x
 import org.jf.dexlib2.iface.instruction.formats.Instruction11n
 import org.jf.dexlib2.iface.instruction.formats.Instruction21c
 import org.jf.dexlib2.iface.instruction.formats.Instruction22c
+import org.jf.dexlib2.iface.instruction.formats.Instruction31c
 import org.jf.dexlib2.iface.instruction.formats.Instruction35c
 import org.jf.dexlib2.iface.reference.Reference
 import org.jf.dexlib2.iface.reference.TypeReference
 import org.jf.dexlib2.iface.value.EncodedValue
+import org.jf.dexlib2.immutable.instruction.ImmutableInstruction11n
+import org.jf.dexlib2.immutable.instruction.ImmutableInstruction23x
+import org.jf.dexlib2.immutable.instruction.ImmutableInstruction31c
+import org.jf.dexlib2.immutable.instruction.ImmutableInstruction35c
+import org.jf.dexlib2.immutable.reference.ImmutableMethodReference
+import org.jf.dexlib2.immutable.reference.ImmutableStringReference
 import java.math.BigInteger
 import java.security.MessageDigest
 
@@ -130,7 +137,7 @@ fun generateSignatureClass(signatureData: List<String>): ClassDef {
             override fun getAccessFlags() = AccessFlags.STATIC.ordinal
 
             private val implementation: MethodImplementation = object : BaseMethodImplementation() {
-                override fun getRegisterCount() = 3
+                override fun getRegisterCount() = 4
                 private val instructions: Iterable<Instruction> = listOf(object : BaseConst4Instruction() {
                     override fun getNarrowLiteral() = signatureData.size
                     override fun getRegisterA() = 0
@@ -141,7 +148,7 @@ fun generateSignatureClass(signatureData: List<String>): ClassDef {
                     override fun getReferenceType() = ReferenceType.TYPE
                     private val reference: Reference = signatureArrayTypeReference
                     override fun getReference() = reference
-                }, *signatureData.fold(ArrayList(signatureData.size * 4)) { arrayList: ArrayList<Instruction>, s: String ->
+                }, *signatureData.foldIndexed(ArrayList(signatureData.size * 4)) { index: Int, arrayList: ArrayList<Instruction>, s: String ->
                     arrayList.add(object : BaseInstruction(), Instruction21c {
                         override fun getOpcode() = Opcode.NEW_INSTANCE
                         private val reference: Reference = object : BaseTypeReference() {
@@ -152,6 +159,10 @@ fun generateSignatureClass(signatureData: List<String>): ClassDef {
                         override fun getReferenceType() = ReferenceType.TYPE
                         override fun getRegisterA() = 1
                     })
+                    arrayList.add(ImmutableInstruction31c(Opcode.CONST_STRING_JUMBO, 2, ImmutableStringReference(s)))
+                    arrayList.add(ImmutableInstruction35c(Opcode.INVOKE_DIRECT, 2, 1, 2, 0, 0, 0, ImmutableMethodReference("Landroid/content/pm/Signature;", "<init>", listOf(), "V")))
+                    arrayList.add(ImmutableInstruction11n(Opcode.CONST_4, 3, index))
+                    arrayList.add(ImmutableInstruction23x(Opcode.APUT_OBJECT, 1, 0, 3))
                     arrayList
                 }.toTypedArray(), object : BaseInstruction(), Instruction21c {
                     override fun getOpcode() = Opcode.SPUT_OBJECT
