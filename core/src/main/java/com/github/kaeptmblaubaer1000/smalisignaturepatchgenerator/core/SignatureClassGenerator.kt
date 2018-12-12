@@ -27,11 +27,13 @@ import org.jf.dexlib2.iface.reference.Reference
 import org.jf.dexlib2.iface.reference.TypeReference
 import org.jf.dexlib2.iface.value.EncodedValue
 import org.jf.dexlib2.immutable.instruction.ImmutableInstruction11n
+import org.jf.dexlib2.immutable.instruction.ImmutableInstruction21c
 import org.jf.dexlib2.immutable.instruction.ImmutableInstruction23x
 import org.jf.dexlib2.immutable.instruction.ImmutableInstruction31c
 import org.jf.dexlib2.immutable.instruction.ImmutableInstruction35c
 import org.jf.dexlib2.immutable.reference.ImmutableMethodReference
 import org.jf.dexlib2.immutable.reference.ImmutableStringReference
+import org.jf.dexlib2.immutable.reference.ImmutableTypeReference
 import java.math.BigInteger
 import java.security.MessageDigest
 
@@ -149,16 +151,7 @@ fun generateSignatureClass(signatureData: List<String>): ClassDef {
                     private val reference: Reference = signatureArrayTypeReference
                     override fun getReference() = reference
                 }, *signatureData.foldIndexed(ArrayList(signatureData.size * 4)) { index: Int, arrayList: ArrayList<Instruction>, s: String ->
-                    arrayList.add(object : BaseInstruction(), Instruction21c {
-                        override fun getOpcode() = Opcode.NEW_INSTANCE
-                        private val reference: Reference = object : BaseTypeReference() {
-                            override fun getType() = "Landroid/content/pm/Signature;"
-                        }
-
-                        override fun getReference() = reference
-                        override fun getReferenceType() = ReferenceType.TYPE
-                        override fun getRegisterA() = 1
-                    })
+                    arrayList.add(ImmutableInstruction21c(Opcode.NEW_INSTANCE, 1,  ImmutableTypeReference("Landroid/content/pm/Signature;")))
                     arrayList.add(ImmutableInstruction31c(Opcode.CONST_STRING_JUMBO, 2, ImmutableStringReference(s)))
                     arrayList.add(ImmutableInstruction35c(Opcode.INVOKE_DIRECT, 2, 1, 2, 0, 0, 0, ImmutableMethodReference("Landroid/content/pm/Signature;", "<init>", listOf(), "V")))
                     arrayList.add(ImmutableInstruction11n(Opcode.CONST_4, 3, index))
