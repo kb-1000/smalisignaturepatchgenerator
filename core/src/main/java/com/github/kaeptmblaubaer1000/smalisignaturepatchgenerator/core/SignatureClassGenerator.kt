@@ -94,12 +94,28 @@ fun generateSignatureClass(signatureData: List<String>): ClassDef {
             override fun getOpcode() = Opcode.INVOKE_DIRECT
         }
 
-        private val returnVoidInstruction = object : BaseInstruction(), Instruction10x {
-            override fun getOpcode() = Opcode.RETURN_VOID
-        }
-
         private val signatureArrayTypeReference: TypeReference = object : BaseTypeReference() {
             override fun getType() = "Landroid/content/pm/Signature;"
+        }
+
+        private inline fun getListStaticFields(function: () -> Unit): List<Field> {
+            function()
+            return staticFields
+        }
+
+        private val staticFields = listOf(object : BaseFieldReference(), Field {
+            override fun getDefiningClass() = className {}
+            override fun getName() = "signatures"
+            private val type = signatureArrayTypeReference.toString()
+            override fun getType() = type
+            private val accessFlags = AccessFlags.STATIC.ordinal or AccessFlags.PUBLIC.ordinal or AccessFlags.FINAL.ordinal
+            override fun getAccessFlags() = accessFlags
+            override fun getInitialValue(): EncodedValue? = null
+            override fun getAnnotations(): Set<Annotation> = emptySet
+        })
+
+        private val returnVoidInstruction = object : BaseInstruction(), Instruction10x {
+            override fun getOpcode() = Opcode.RETURN_VOID
         }
 
         override fun getType() = type
@@ -176,22 +192,6 @@ fun generateSignatureClass(signatureData: List<String>): ClassDef {
         override fun getMethods() = directMethods
 
         override fun getSuperclass(): String? = null
-
-        private val staticFields = listOf(object : BaseFieldReference(), Field {
-            override fun getDefiningClass() = className {}
-            override fun getName() = "signatures"
-            private val type = signatureArrayTypeReference.toString()
-            override fun getType() = type
-            private val accessFlags = AccessFlags.STATIC.ordinal or AccessFlags.PUBLIC.ordinal or AccessFlags.FINAL.ordinal
-            override fun getAccessFlags() = accessFlags
-            override fun getInitialValue(): EncodedValue? = null
-            override fun getAnnotations(): Set<Annotation> = emptySet
-        })
-
-        private inline fun getListStaticFields(function: () -> Unit): List<Field> {
-            function()
-            return staticFields
-        }
 
         override fun getStaticFields(): Iterable<Field> = staticFields
 
