@@ -21,7 +21,6 @@ import org.jf.dexlib2.iface.instruction.formats.Instruction10x
 import org.jf.dexlib2.iface.instruction.formats.Instruction11n
 import org.jf.dexlib2.iface.instruction.formats.Instruction21c
 import org.jf.dexlib2.iface.instruction.formats.Instruction22c
-import org.jf.dexlib2.iface.instruction.formats.Instruction31c
 import org.jf.dexlib2.iface.instruction.formats.Instruction35c
 import org.jf.dexlib2.iface.reference.Reference
 import org.jf.dexlib2.iface.reference.TypeReference
@@ -34,7 +33,6 @@ import org.jf.dexlib2.immutable.instruction.ImmutableInstruction35c
 import org.jf.dexlib2.immutable.reference.ImmutableMethodReference
 import org.jf.dexlib2.immutable.reference.ImmutableStringReference
 import org.jf.dexlib2.immutable.reference.ImmutableTypeReference
-import java.math.BigInteger
 import java.security.MessageDigest
 
 private val emptyList: List<Nothing> = emptyList()
@@ -50,7 +48,7 @@ fun generateSignatureClass(signatureData: List<String>): ClassDef {
             val md = MessageDigest.getInstance("SHA-512")
             md.update(signatureData.joinTo(StringBuilder(), "\n").toString().toByteArray(Charsets.US_ASCII))
             val digest = md.digest()
-            "Signature${BigInteger(digest).toString(16).padStart(digest.size * 2, '0')}"
+            "LSignature${digest.toHexString()};"
         }
 
         private inline fun className(function: () -> Unit): String {
