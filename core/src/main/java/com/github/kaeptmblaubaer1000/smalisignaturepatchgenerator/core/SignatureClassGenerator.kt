@@ -189,7 +189,7 @@ fun generateSignatureClass(signatureData: List<String>): ClassDef {
 
         override fun getMethods() = directMethods
 
-        override fun getSuperclass(): String? = null
+        override fun getSuperclass(): String? = "Ljava/lang/Object;"
 
         override fun getStaticFields(): Iterable<Field> = staticFields
 
