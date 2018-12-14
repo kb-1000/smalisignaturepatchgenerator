@@ -106,7 +106,7 @@ fun generateSignatureClass(signatureData: List<String>): ClassDef {
             override fun getName() = "signatures"
             private val type = signatureArrayTypeReference.toString()
             override fun getType() = type
-            private val accessFlags = AccessFlags.STATIC.ordinal or AccessFlags.PUBLIC.ordinal or AccessFlags.FINAL.ordinal
+            private val accessFlags = AccessFlags.STATIC.value or AccessFlags.PUBLIC.value or AccessFlags.FINAL.value
             override fun getAccessFlags() = accessFlags
             override fun getInitialValue(): EncodedValue? = null
             override fun getAnnotations(): Set<Annotation> = emptySet
@@ -124,7 +124,7 @@ fun generateSignatureClass(signatureData: List<String>): ClassDef {
 
         private val directMethods: Iterable<Method> = listOf(object : BaseMethod() {
             override fun getName(): String = "<init>"
-            override fun getAccessFlags(): Int = AccessFlags.PRIVATE.ordinal
+            override fun getAccessFlags(): Int = AccessFlags.PRIVATE.value
 
             private val implementation: MethodImplementation = object : BaseMethodImplementation() {
                 override fun getRegisterCount() = 1
@@ -150,7 +150,7 @@ fun generateSignatureClass(signatureData: List<String>): ClassDef {
             override fun getImplementation(): MethodImplementation? = implementation
         }, object : BaseMethod() {
             override fun getName() = "<clinit>"
-            override fun getAccessFlags() = AccessFlags.STATIC.ordinal
+            override fun getAccessFlags() = AccessFlags.STATIC.value
 
             private val implementation: MethodImplementation = object : BaseMethodImplementation() {
                 override fun getRegisterCount() = 4
@@ -195,7 +195,7 @@ fun generateSignatureClass(signatureData: List<String>): ClassDef {
 
         override fun getInstanceFields(): Iterable<Field> = emptyList
 
-        private val accessFlags: Int = AccessFlags.PUBLIC.ordinal or AccessFlags.FINAL.ordinal
+        private val accessFlags: Int = AccessFlags.PUBLIC.value or AccessFlags.FINAL.value
 
         override fun getAccessFlags() = accessFlags
 
