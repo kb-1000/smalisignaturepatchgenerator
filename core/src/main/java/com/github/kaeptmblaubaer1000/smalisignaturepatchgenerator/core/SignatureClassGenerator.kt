@@ -92,9 +92,7 @@ fun generateSignatureClass(signatureData: List<String>): ClassDef {
             override fun getOpcode() = Opcode.INVOKE_DIRECT
         }
 
-        private val signatureArrayTypeReference: TypeReference = object : BaseTypeReference() {
-            override fun getType() = "Landroid/content/pm/Signature;"
-        }
+        private val signatureArrayType: String = "[Landroid/content/pm/Signature;"
 
         private inline fun getListStaticFields(function: () -> Unit): List<Field> {
             function()
@@ -104,7 +102,7 @@ fun generateSignatureClass(signatureData: List<String>): ClassDef {
         private val staticFields = listOf(object : BaseFieldReference(), Field {
             override fun getDefiningClass() = className {}
             override fun getName() = "signatures"
-            private val type = signatureArrayTypeReference.toString()
+            private val type = signatureArrayType
             override fun getType() = type
             private val accessFlags = AccessFlags.STATIC.value or AccessFlags.PUBLIC.value or AccessFlags.FINAL.value
             override fun getAccessFlags() = accessFlags
@@ -162,7 +160,7 @@ fun generateSignatureClass(signatureData: List<String>): ClassDef {
                     override fun getRegisterA() = 0
                     override fun getRegisterB() = 0
                     override fun getReferenceType() = ReferenceType.TYPE
-                    private val reference: Reference = signatureArrayTypeReference
+                    private val reference: Reference = ImmutableTypeReference(signatureArrayType)
                     override fun getReference() = reference
                 }, *signatureData.foldIndexed(ArrayList(signatureData.size * 4)) { index: Int, arrayList: ArrayList<Instruction>, s: String ->
                     arrayList.add(ImmutableInstruction21c(Opcode.NEW_INSTANCE, 1,  ImmutableTypeReference("Landroid/content/pm/Signature;")))
