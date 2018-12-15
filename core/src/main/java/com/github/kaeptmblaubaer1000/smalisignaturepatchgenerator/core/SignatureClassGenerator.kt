@@ -122,7 +122,7 @@ fun generateSignatureClass(signatureData: List<String>): ClassDef {
 
         private val directMethods: Iterable<Method> = listOf(object : BaseMethod() {
             override fun getName(): String = "<init>"
-            override fun getAccessFlags(): Int = AccessFlags.PRIVATE.value
+            override fun getAccessFlags(): Int = AccessFlags.PRIVATE.value or AccessFlags.CONSTRUCTOR.value
 
             private val implementation: MethodImplementation = object : BaseMethodImplementation() {
                 override fun getRegisterCount() = 1
@@ -148,7 +148,7 @@ fun generateSignatureClass(signatureData: List<String>): ClassDef {
             override fun getImplementation(): MethodImplementation? = implementation
         }, object : BaseMethod() {
             override fun getName() = "<clinit>"
-            override fun getAccessFlags() = AccessFlags.STATIC.value
+            override fun getAccessFlags() = AccessFlags.STATIC.value or AccessFlags.CONSTRUCTOR.value
 
             private val implementation: MethodImplementation = object : BaseMethodImplementation() {
                 override fun getRegisterCount() = 4
