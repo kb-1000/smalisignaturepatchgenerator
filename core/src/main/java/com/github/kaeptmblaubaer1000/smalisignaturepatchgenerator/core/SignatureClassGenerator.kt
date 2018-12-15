@@ -175,7 +175,7 @@ fun generateSignatureClass(signatureData: List<String>): ClassDef {
                     override fun getReference() = reference
                     override fun getReferenceType() = ReferenceType.FIELD
                     override fun getRegisterA() = 0
-                })
+                }, returnVoidInstruction)
 
                 override fun getInstructions() = instructions
             }
