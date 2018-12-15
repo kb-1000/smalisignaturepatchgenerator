@@ -165,7 +165,7 @@ fun generateSignatureClass(signatureData: List<String>): ClassDef {
                 }, *signatureData.foldIndexed(ArrayList(signatureData.size * 4)) { index: Int, arrayList: ArrayList<Instruction>, s: String ->
                     arrayList.add(ImmutableInstruction21c(Opcode.NEW_INSTANCE, 1,  ImmutableTypeReference("Landroid/content/pm/Signature;")))
                     arrayList.add(ImmutableInstruction31c(Opcode.CONST_STRING_JUMBO, 2, ImmutableStringReference(s)))
-                    arrayList.add(ImmutableInstruction35c(Opcode.INVOKE_DIRECT, 2, 1, 2, 0, 0, 0, ImmutableMethodReference("Landroid/content/pm/Signature;", "<init>", listOf(), "V")))
+                    arrayList.add(ImmutableInstruction35c(Opcode.INVOKE_DIRECT, 2, 1, 2, 0, 0, 0, ImmutableMethodReference("Landroid/content/pm/Signature;", "<init>", listOf("Ljava/lang/String;"), "V")))
                     arrayList.add(ImmutableInstruction11n(Opcode.CONST_4, 3, index))
                     arrayList.add(ImmutableInstruction23x(Opcode.APUT_OBJECT, 1, 0, 3))
                     arrayList
